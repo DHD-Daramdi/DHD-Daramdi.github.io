@@ -119,6 +119,10 @@ const FIELD_GROUPS = {
 
 
     ["skill_multiplier","환락 스킬 계수 (%)","percent",100]
+
+    ["final_damage_increase_1","최종 피해 증가 1 (%)","percent",0],
+    ["final_damage_increase_2","최종 피해 증가 2 (%)","percent",0],
+    ["final_damage_increase_3","최종 피해 증가 3 (%)","percent",0],
   ]
 };
 
@@ -333,6 +337,14 @@ function calculate() {
 
   // 최종 캐릭터 스탯
   const stats = finalStats(pool);
+
+  // 최종 데미지 증가
+  const finalMods = {
+  increase_1: damage.final_damage_increase_1,
+  increase_2: damage.final_damage_increase_2,
+  increase_3: damage.final_damage_increase_3,
+
+  confirmed_damage: pool.confirmed_damage};
 
   // 적 스탯 복사
   const enemy = {
