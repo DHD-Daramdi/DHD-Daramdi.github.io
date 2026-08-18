@@ -542,7 +542,7 @@ class BreakDamageCalculator:
             BREAK_ELEMENT_MULTIPLIERS[
                  break_stats.break_element
                   ]
-)
+        )
 
         defense = CommonMultipliers.defense(
             enemy.level,
