@@ -192,3 +192,25 @@ header {
   width: 100%;
   text-align: right;
 }
+
+@media (max-width: 1100px) {
+  #enemyFields,
+  #char1Fields,
+  #char2Fields,
+  #char3Fields,
+  #char4Fields,
+  #damageFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  #enemyFields,
+  #char1Fields,
+  #char2Fields,
+  #char3Fields,
+  #char4Fields,
+  #damageFields {
+    grid-template-columns: 1fr;
+  }
+}
