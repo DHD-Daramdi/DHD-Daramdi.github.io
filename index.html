@@ -5,83 +5,330 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>다람디의 스타레일 데미지 계산기 beta v1</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* =========================================================
+   오른쪽 결과 패널
+   ========================================================= */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* 오른쪽 영역 전체를 화면에 붙여둠 */
+.result-side {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  max-height: calc(100vh - 40px);
+}
+
+/* 계산 결과 */
+.result-side .result {
+  overflow-y: auto;
+  max-height: calc(100vh - 100px);
+}
+
+/* 오른쪽 계산 버튼 */
+.result-side .actions {
+  margin: 0;
+}
+
+.result-side .primary {
+  width: 100%;
+  padding: 14px 16px;
+
+  font-size: 1.15rem;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+/*
+   기존 왼쪽 아래 계산 버튼은
+   공간만 차지하지 않도록 숨긴다.
+*/
+.input-area > .actions {
+  display: none;
+}
+
+
+/* =========================================================
+   화면이 좁아졌을 때
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .result-side {
+    position: static;
+    max-height: none;
+  }
+
+  .result-side .result {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+</style>
 </head>
+
 <body>
+
 <header>
   <h1>다람디의 스타레일 데미지 계산기 beta v1</h1>
   <p>서버 없이 브라우저에서 실행 · 설정은 이 브라우저에만 저장됩니다.</p>
 </header>
 
 <main>
+
 <section class="toolbar">
-  <label>저장 슬롯
+
+  <label>
+    저장 슬롯
     <select id="saveSelect"></select>
   </label>
-  <input id="saveName" placeholder="세팅 이름">
+
+  <input
+    id="saveName"
+    placeholder="세팅 이름"
+  >
+
   <button id="saveBtn">저장</button>
   <button id="loadBtn">불러오기</button>
   <button id="deleteBtn">삭제</button>
   <button id="resetBtn">초기화</button>
+
 </section>
+
 
 <section class="workspace">
+
+  <!-- =====================================================
+       왼쪽 : 입력창
+       ===================================================== -->
+
   <div class="input-area">
+
     <section class="input-grid">
+
+      <!-- 적 -->
       <div class="panel">
+
         <h2>적 스탯</h2>
-        <input id="enemyName" class="name-input" placeholder="적 이름">
+
+        <input
+          id="enemyName"
+          class="name-input"
+          placeholder="적 이름"
+        >
+
         <div id="enemyFields"></div>
+
       </div>
 
+
+      <!-- 캐릭터 1 -->
       <div class="panel">
+
         <h2>캐릭터 1 · 계산 대상</h2>
-        <input id="char1Name" class="name-input" placeholder="캐릭터 1 이름">
+
+        <input
+          id="char1Name"
+          class="name-input"
+          placeholder="캐릭터 1 이름"
+        >
+
         <div id="char1Fields"></div>
+
       </div>
 
+
+      <!-- 캐릭터 2 -->
       <div class="panel">
+
         <h2>캐릭터 2 · 버프</h2>
-        <input id="char2Name" class="name-input" placeholder="캐릭터 2 이름">
-        <label class="check"><input id="buff2Enabled" type="checkbox" checked> 버프 적용</label>
+
+        <input
+          id="char2Name"
+          class="name-input"
+          placeholder="캐릭터 2 이름"
+        >
+
+        <label class="check">
+          <input
+            id="buff2Enabled"
+            type="checkbox"
+            checked
+          >
+          버프 적용
+        </label>
+
         <div id="char2Fields"></div>
+
       </div>
 
+
+      <!-- 캐릭터 3 -->
       <div class="panel">
+
         <h2>캐릭터 3 · 버프</h2>
-        <input id="char3Name" class="name-input" placeholder="캐릭터 3 이름">
-        <label class="check"><input id="buff3Enabled" type="checkbox" checked> 버프 적용</label>
+
+        <input
+          id="char3Name"
+          class="name-input"
+          placeholder="캐릭터 3 이름"
+        >
+
+        <label class="check">
+          <input
+            id="buff3Enabled"
+            type="checkbox"
+            checked
+          >
+          버프 적용
+        </label>
+
         <div id="char3Fields"></div>
+
       </div>
 
+
+      <!-- 캐릭터 4 -->
       <div class="panel">
+
         <h2>캐릭터 4 · 버프</h2>
-        <input id="char4Name" class="name-input" placeholder="캐릭터 4 이름">
-        <label class="check"><input id="buff4Enabled" type="checkbox" checked> 버프 적용</label>
+
+        <input
+          id="char4Name"
+          class="name-input"
+          placeholder="캐릭터 4 이름"
+        >
+
+        <label class="check">
+          <input
+            id="buff4Enabled"
+            type="checkbox"
+            checked
+          >
+          버프 적용
+        </label>
+
         <div id="char4Fields"></div>
+
       </div>
 
+
+      <!-- 데미지 설정 -->
       <div class="panel">
+
         <h2>데미지 설정</h2>
+
         <div id="damageFields"></div>
+
       </div>
+
     </section>
+
+
+    <!--
+      기존 calcBtn은 app.js가 사용하므로
+      DOM에는 남겨둔다.
+      CSS에서 숨기기 때문에 실제 화면에는 나타나지 않는다.
+    -->
 
     <section class="actions">
-      <button id="calcBtn" class="primary">계산</button>
+      <button
+        id="calcBtn"
+        class="primary"
+      >
+        계산
+      </button>
     </section>
+
   </div>
 
+
+  <!-- =====================================================
+       오른쪽 : 계산 버튼 + 결과
+       ===================================================== -->
+
   <aside class="result-side">
-    <section class="result panel">
-      <h2>계산 결과</h2>
-      <div id="result"></div>
+
+    <section class="actions">
+
+      <!--
+        이 버튼을 누르면 아래의 JavaScript가
+        기존 calcBtn을 대신 눌러준다.
+      -->
+
+      <button
+        id="calcBtnSide"
+        class="primary"
+      >
+        계산
+      </button>
+
     </section>
+
+
+    <section class="result panel">
+
+      <h2>계산 결과</h2>
+
+      <div id="result"></div>
+
+    </section>
+
   </aside>
+
 </section>
+
 </main>
+
+
+<!-- =======================================================
+     기존 JavaScript
+     ======================================================= -->
 
 <script src="damage.js"></script>
 <script src="buffs.js"></script>
 <script src="app.js"></script>
+
+
+<!-- =======================================================
+     오른쪽 계산 버튼 연결
+     ======================================================= -->
+
+<script>
+
+document
+  .getElementById("calcBtnSide")
+  .addEventListener("click", function () {
+
+    /*
+      app.js가 기존 calcBtn에 계산 이벤트를
+      연결하고 있으므로 그 버튼을 대신 클릭한다.
+    */
+
+    document
+      .getElementById("calcBtn")
+      .click();
+
+  });
+
+</script>
+
 </body>
 </html>
