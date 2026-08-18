@@ -17,6 +17,7 @@ function makePool() {
     resistance_penetration:0,
     confirmed_damage:0,
     elation_increase:0,
+    super_break_multiplier: 0,
     break_damage_increase:0,
     break_effect:0, elation:0, laugh_points:0
   };
