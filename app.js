@@ -50,6 +50,7 @@ const FIELD_GROUPS = {
     ["elation_increase","증소 (%)","percent",0],
 
     // 격파 / 슈퍼 격파 전용
+    ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
     ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
     ["break_effect","격파 특수효과 (%)","percent",0],
 
@@ -92,6 +93,7 @@ const FIELD_GROUPS = {
     ["elation_increase","증소 (%)","percent",0],
 
     // 격파 / 슈퍼 격파 전용
+    ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
     ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
     ["break_effect","격파 특수효과 (%)","percent",0],
 
@@ -115,7 +117,6 @@ const FIELD_GROUPS = {
     ["toughness_damage","강인성 감소 수치","number",0],
     ["max_toughness","적 최대 강인성","number",20],
 
-    ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
 
     ["skill_multiplier","환락 스킬 계수 (%)","percent",100]
   ]
