@@ -3,9 +3,9 @@ const FIELD_GROUPS = {
   enemy: [
     ["level","적 레벨","number",95],
     ["resistance","속성 저항 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통 (%)","percent",0],
+    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
     ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 관통 (%)","percent",0],
+    ["defense_penetration","방어력 감소 (%)","percent",0],
     ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
     ["damage_taken_reduction","받는 피해 감소 (%)","percent",0]
   ],
@@ -29,8 +29,8 @@ const FIELD_GROUPS = {
     ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
     ["damage_taken_increase","적 받는 피해 증가 (%)","percent",0],
     ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 관통 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통 (%)","percent",0],
+    ["defense_penetration","방어력 감소 (%)","percent",0],
+    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
     ["confirmed_damage","확정 피해 (%)","percent",0],
     ["elation_increase","증소 (%)","percent",0],
     ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
@@ -54,8 +54,8 @@ const FIELD_GROUPS = {
     ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
     ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
     ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 관통 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통 (%)","percent",0],
+    ["defense_penetration","방어력 감소 (%)","percent",0],
+    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
     ["confirmed_damage","확정 피해 (%)","percent",0],
     ["elation_increase","증소 (%)","percent",0],
     ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
@@ -212,8 +212,8 @@ function renderResult(r,s,p,type) {
     <div class="result-item"><span>확정 피해</span><strong>${pct(p.confirmed_damage)} (${mult(p.confirmed_damage)})</strong></div>
     <div class="result-item"><span>적 받는 피해 증가</span><strong>${pct(p.damage_taken_increase)}</strong></div>
     <div class="result-item"><span>방어력 무시</span><strong>${pct(p.defense_ignore)}</strong></div>
-    <div class="result-item"><span>방어력 관통</span><strong>${pct(p.defense_penetration)}</strong></div>
-    <div class="result-item"><span>속성 저항 관통</span><strong>${pct(p.resistance_penetration)}</strong></div>
+    <div class="result-item"><span>방어력 감소</span><strong>${pct(p.defense_penetration)}</strong></div>
+    <div class="result-item"><span>속성 저항 관통/감소</span><strong>${pct(p.resistance_penetration)}</strong></div>
   </div>`;
 
   html+=`<h3 class="result-section-title">데미지 타입별 버프</h3>
