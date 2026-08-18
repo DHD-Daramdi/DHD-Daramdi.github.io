@@ -69,7 +69,6 @@ const FIELD_GROUPS = {
     ["attack_ratio","공격력 계수 (%)","percent",100],
     ["hp_ratio","HP 계수 (%)","percent",0],
     ["defense_ratio","방어력 계수 (%)","percent",0],
-    ["damage_bonus","스킬 피해 증가 (%)","percent",0],
     ["break_element","격파 속성","select","물리"],
     ["toughness_damage","강인성 감소 수치","number",0],
     ["max_toughness","적 최대 강인성","number",20],
