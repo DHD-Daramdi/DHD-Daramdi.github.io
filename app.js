@@ -489,6 +489,7 @@ function calculate() {
       finalMods,
 
       {
+        super_break_multiplier: pool.super_break_multiplier,
         break_damage_increase:
           pool.break_damage_increase
       }
