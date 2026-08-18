@@ -338,83 +338,63 @@ function calculate() {
   // 최종 캐릭터 스탯
   const stats = finalStats(pool);
 
-  // 최종 데미지 증가
-  const finalMods = {
-  increase_1: damage.final_damage_increase_1,
-  increase_2: damage.final_damage_increase_2,
-  increase_3: damage.final_damage_increase_3,
-
-  confirmed_damage: pool.confirmed_damage};
+  // 데미지 설정
+  const damage = data.damage;
 
   // 적 스탯 복사
   const enemy = {
     ...data.enemy
   };
 
-
   // ==========================================================
   // 아군이 적에게 거는 효과
   // ==========================================================
 
-  enemy.defense_ignore =
-    Math.min(
-      enemy.defense_ignore +
-      pool.defense_ignore,
-      1.0
-    );
+  enemy.defense_ignore = Math.min(
+    enemy.defense_ignore + pool.defense_ignore,
+    1.0
+  );
 
-  enemy.defense_penetration =
-    Math.min(
-      enemy.defense_penetration +
-      pool.defense_penetration,
-      1.0
-    );
+  enemy.defense_penetration = Math.min(
+    enemy.defense_penetration + pool.defense_penetration,
+    1.0
+  );
 
   enemy.resistance_penetration =
     enemy.resistance_penetration +
     pool.resistance_penetration;
 
   // 받는 피해 증가 최대 250%
-  enemy.damage_taken_increase =
-    Math.min(
-      enemy.damage_taken_increase +
-      pool.damage_taken_increase,
-      2.5
-    );
-
+  enemy.damage_taken_increase = Math.min(
+    enemy.damage_taken_increase +
+    pool.damage_taken_increase,
+    2.5
+  );
 
   // ==========================================================
   // 최종 피해 증가류
-  //
-  // 현재 UI에서는 1종만 사용.
-  // 나중에 2~3종을 추가하면 여기에 연결.
+  // 서로 독립이므로 damage.js에서 각각 곱연산
   // ==========================================================
 
   const finalMods = {
-    increase_1:
-      0,
-
-    increase_2:
-      0,
-
-    increase_3:
-      0,
+    increase_1: damage.final_damage_increase_1,
+    increase_2: damage.final_damage_increase_2,
+    increase_3: damage.final_damage_increase_3,
 
     confirmed_damage:
       pool.confirmed_damage
   };
 
-
-  const damage = data.damage;
+  // ==========================================================
+  // 데미지 계산
+  // ==========================================================
 
   let result;
 
-
-  // ==========================================================
+  // ----------------------------------------------------------
   // 일반 / 치명타
-  //
-  // 가하는 피해 증가만 일반 데미지에 적용
-  // ==========================================================
+  // 가하는 피해 증가 적용
+  // ----------------------------------------------------------
 
   if (damage.damageType === "NORMAL") {
 
@@ -422,32 +402,24 @@ function calculate() {
       stats,
       enemy,
       {
-        attack_ratio:
-          damage.attack_ratio,
-
-        hp_ratio:
-          damage.hp_ratio,
-
-        defense_ratio:
-          damage.defense_ratio
+        attack_ratio: damage.attack_ratio,
+        hp_ratio: damage.hp_ratio,
+        defense_ratio: damage.defense_ratio
       },
-
       finalMods,
-
       {
         dealt_damage_increase:
           pool.dealt_damage_increase
       }
     );
+
   }
 
-
-  // ==========================================================
+  // ----------------------------------------------------------
   // 격파
-  //
   // 가하는 피해 증가 X
   // 가하는 격파 피해 증가 O
-  // ==========================================================
+  // ----------------------------------------------------------
 
   else if (damage.damageType === "BREAK") {
 
@@ -462,25 +434,22 @@ function calculate() {
         break_element:
           damage.break_element
       },
-
       enemy,
-
       finalMods,
-
       {
         break_damage_increase:
           pool.break_damage_increase
       }
     );
+
   }
 
-
-  // ==========================================================
+  // ----------------------------------------------------------
   // 슈퍼 격파
-  //
   // 가하는 피해 증가 X
   // 가하는 격파 피해 증가 O
-  // ==========================================================
+  // 슈퍼 격파 계수는 캐릭터 1~4 버프
+  // ----------------------------------------------------------
 
   else if (damage.damageType === "SUPER_BREAK") {
 
@@ -490,33 +459,28 @@ function calculate() {
           pool.break_effect,
 
         toughness_damage:
-          damage.toughness_damage,
-
-        super_break_multiplier:
-          damage.super_break_multiplier
+          damage.toughness_damage
       },
-
       enemy,
-
       finalMods,
-
       {
-        super_break_multiplier: pool.super_break_multiplier,
+        super_break_multiplier:
+          pool.super_break_multiplier,
+
         break_damage_increase:
           pool.break_damage_increase
       }
     );
+
   }
 
-
-  // ==========================================================
+  // ----------------------------------------------------------
   // 환락
-  //
   // 가하는 피해 증가 X
   // 증소 O
-  // ==========================================================
+  // ----------------------------------------------------------
 
-  else {
+  else if (damage.damageType === "ELATION") {
 
     result = elationDamage(
       {
@@ -527,7 +491,6 @@ function calculate() {
           pool.elation,
 
         laugh_points:
-          damage.laugh_points ||
           pool.laugh_points,
 
         crit_rate:
@@ -536,18 +499,15 @@ function calculate() {
         crit_damage:
           pool.crit_damage
       },
-
       enemy,
-
       finalMods,
-
       {
         elation_increase:
           pool.elation_increase
       }
     );
-  }
 
+  }
 
   renderResult(
     result,
@@ -557,6 +517,8 @@ function calculate() {
     damage.damageType
   );
 }
+
+
 
 
 // ============================================================
