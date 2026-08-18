@@ -25,7 +25,7 @@ function damageTakenIncrease(v) {
   return 1 + Math.min(v, 2.5);
 }
 function damageTakenReduction(v) {
-  return 1 - v;
+  return 1 - (v || 0);
 }
 function commonMultipliers(enemy, finalMods) {
   return defenseMultiplier(enemy.level, enemy.defense_ignore, enemy.defense_penetration)
