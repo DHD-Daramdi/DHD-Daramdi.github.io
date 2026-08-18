@@ -242,20 +242,8 @@
     </section>
 
 
-    <!--
-      기존 calcBtn은 app.js가 사용하므로
-      DOM에는 남겨둔다.
-      CSS에서 숨기기 때문에 실제 화면에는 나타나지 않는다.
-    -->
 
-    <section class="actions">
-      <button
-        id="calcBtn"
-        class="primary"
-      >
-        계산
-      </button>
-    </section>
+
 
   </div>
 
@@ -264,71 +252,31 @@
        오른쪽 : 계산 버튼 + 결과
        ===================================================== -->
 
-  <aside class="result-side">
+   <aside class="result-side">
 
-    <section class="actions">
+      <section class="actions">
+       <button id="calcBtn" class="primary">계산</button>
+      </section>
 
-      <!--
-        이 버튼을 누르면 아래의 JavaScript가
-        기존 calcBtn을 대신 눌러준다.
-      -->
+     <section class="result panel">
+       <h2>계산 결과</h2>
+       <div id="result"></div>
+     </section>
 
-      <button
-        id="calcBtnSide"
-        class="primary"
-      >
-        계산
-      </button>
-
-    </section>
-
-
-    <section class="result panel">
-
-      <h2>계산 결과</h2>
-
-      <div id="result"></div>
-
-    </section>
-
-  </aside>
+   </aside>
 
 </section>
 
 </main>
 
 
-<!-- =======================================================
-     기존 JavaScript
-     ======================================================= -->
 
 <script src="damage.js"></script>
 <script src="buffs.js"></script>
 <script src="app.js"></script>
 
 
-<!-- =======================================================
-     오른쪽 계산 버튼 연결
-     ======================================================= -->
 
-<script>
-
-document
-  .getElementById("calcBtnSide")
-  .addEventListener("click", function () {
-
-    /*
-      app.js가 기존 calcBtn에 계산 이벤트를
-      연결하고 있으므로 그 버튼을 대신 클릭한다.
-    */
-
-    document
-      .getElementById("calcBtn")
-      .click();
-
-  });
-
-</script>
 
 </body>
 </html>
