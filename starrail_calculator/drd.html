@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>다람디의 스타레일 데미지 계산기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>다람디의 스타레일 데미지 계산기</h1>
+  <p>서버 없이 브라우저에서 실행 · 설정은 이 브라우저에만 저장됩니다.</p>
+</header>
+
+<main>
+<section class="toolbar">
+  <label>저장 슬롯
+    <select id="saveSelect"></select>
+  </label>
+  <input id="saveName" placeholder="세팅 이름">
+  <button id="saveBtn">저장</button>
+  <button id="loadBtn">불러오기</button>
+  <button id="deleteBtn">삭제</button>
+  <button id="resetBtn">초기화</button>
+</section>
+
+<section class="workspace">
+  <div class="input-area">
+    <section class="input-grid">
+      <div class="panel">
+        <h2>적 스탯</h2>
+        <input id="enemyName" class="name-input" placeholder="적 이름">
+        <div id="enemyFields"></div>
+      </div>
+
+      <div class="panel">
+        <h2>캐릭터 1 · 계산 대상</h2>
+        <input id="char1Name" class="name-input" placeholder="캐릭터 1 이름">
+        <div id="char1Fields"></div>
+      </div>
+
+      <div class="panel">
+        <h2>캐릭터 2 · 버프</h2>
+        <input id="char2Name" class="name-input" placeholder="캐릭터 2 이름">
+        <label class="check"><input id="buff2Enabled" type="checkbox" checked> 버프 적용</label>
+        <div id="char2Fields"></div>
+      </div>
+
+      <div class="panel">
+        <h2>캐릭터 3 · 버프</h2>
+        <input id="char3Name" class="name-input" placeholder="캐릭터 3 이름">
+        <label class="check"><input id="buff3Enabled" type="checkbox" checked> 버프 적용</label>
+        <div id="char3Fields"></div>
+      </div>
+
+      <div class="panel">
+        <h2>캐릭터 4 · 버프</h2>
+        <input id="char4Name" class="name-input" placeholder="캐릭터 4 이름">
+        <label class="check"><input id="buff4Enabled" type="checkbox" checked> 버프 적용</label>
+        <div id="char4Fields"></div>
+      </div>
+
+      <div class="panel">
+        <h2>데미지 설정</h2>
+        <div id="damageFields"></div>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="calcBtn" class="primary">계산</button>
+    </section>
+  </div>
+
+  <aside class="result-side">
+    <section class="result panel">
+      <h2>계산 결과</h2>
+      <div id="result"></div>
+    </section>
+  </aside>
+</section>
+</main>
+
+<script src="damage.js"></script>
+<script src="buffs.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
