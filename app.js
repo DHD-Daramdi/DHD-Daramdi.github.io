@@ -27,11 +27,6 @@ const FIELD_GROUPS = {
     ["crit_rate","치명타 확률 (%)","percent",0],
     ["crit_damage","치명타 피해 (%)","percent",0],
     ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
-    ["normal_damage_increase","일반 공격 피해 증가 (%)","percent",0],
-    ["skill_damage_increase","전투 스킬 피해 증가 (%)","percent",0],
-    ["ultimate_damage_increase","필살기 피해 증가 (%)","percent",0],
-    ["follow_up_damage_increase","추가 공격 피해 증가 (%)","percent",0],
-    ["additional_damage_increase","기타 피해 증가 (%)","percent",0],
     ["damage_taken_increase","적 받는 피해 증가 (%)","percent",0],
     ["defense_ignore","방어력 무시 (%)","percent",0],
     ["defense_penetration","방어력 관통 (%)","percent",0],
@@ -57,11 +52,6 @@ const FIELD_GROUPS = {
     ["crit_rate","치명타 확률 (%)","percent",0],
     ["crit_damage","치명타 피해 (%)","percent",0],
     ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
-    ["normal_damage_increase","일반 공격 피해 증가 (%)","percent",0],
-    ["skill_damage_increase","전투 스킬 피해 증가 (%)","percent",0],
-    ["ultimate_damage_increase","필살기 피해 증가 (%)","percent",0],
-    ["follow_up_damage_increase","추가 공격 피해 증가 (%)","percent",0],
-    ["additional_damage_increase","기타 피해 증가 (%)","percent",0],
     ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
     ["defense_ignore","방어력 무시 (%)","percent",0],
     ["defense_penetration","방어력 관통 (%)","percent",0],
@@ -170,8 +160,7 @@ function calculate() {
   e.resistance_penetration+=p.resistance_penetration;
   e.damage_taken_increase=Math.min(e.damage_taken_increase+p.damage_taken_increase, 2.5);
 
-  const f={increase_1:p.dealt_damage_increase+p.normal_damage_increase+p.skill_damage_increase+
-      p.ultimate_damage_increase+p.follow_up_damage_increase+p.additional_damage_increase,
+  const f={increase_1:p.dealt_damage_increase,
       increase_2:0,increase_3:0};
 
   const x=d.damage;
@@ -230,11 +219,6 @@ function renderResult(r,s,p,type) {
 
   html+=`<h3 class="result-section-title">데미지 타입별 버프</h3>
   <div class="result-grid">
-    <div class="result-item"><span>일반 공격 피해 증가</span><strong>${pct(p.normal_damage_increase)}</strong></div>
-    <div class="result-item"><span>전투 스킬 피해 증가</span><strong>${pct(p.skill_damage_increase)}</strong></div>
-    <div class="result-item"><span>필살기 피해 증가</span><strong>${pct(p.ultimate_damage_increase)}</strong></div>
-    <div class="result-item"><span>추가 공격 피해 증가</span><strong>${pct(p.additional_damage_increase)}</strong></div>
-    <div class="result-item"><span>추가 공격/후속 피해 증가</span><strong>${pct(p.follow_up_damage_increase)}</strong></div>
     <div class="result-item"><span>증소</span><strong>${pct(p.elation_increase)}</strong></div>
     <div class="result-item"><span>가하는 격파 피해 증가</span><strong>${pct(p.break_damage_increase)}</strong></div>
     <div class="result-item"><span>격파 특수효과</span><strong>${pct(p.break_effect)}</strong></div>
