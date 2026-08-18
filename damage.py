@@ -527,10 +527,7 @@ class BreakDamageCalculator:
 
         base_damage = BREAK_BASE_DAMAGE
 
-        # ----------------------------------------------------
-        # 현재는 임시 구조
-        # 실제 격파 공식으로 추후 교체
-        # ----------------------------------------------------
+  
 
         toughness_multiplier = (
             0.5
