@@ -14,8 +14,6 @@ function makePool() {
     dealt_damage_increase:0,
     damage_taken_increase:0,
     normal_damage_increase:0, skill_damage_increase:0,
-    ultimate_damage_increase:0, follow_up_damage_increase:0,
-    additional_damage_increase:0,
     defense_ignore:0, defense_penetration:0,
     resistance_penetration:0,
     confirmed_damage:0,
