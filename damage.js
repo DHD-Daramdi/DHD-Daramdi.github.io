@@ -28,11 +28,22 @@ function damageTakenReduction(v) {
   return 1 - (v || 0);
 }
 function commonMultipliers(enemy, finalMods) {
-  return defenseMultiplier(enemy.level, enemy.defense_ignore, enemy.defense_penetration)
-    * resistanceMultiplier(enemy.resistance, enemy.resistance_penetration)
-    * finalDamageMultiplier(finalMods.increase_1, finalMods.increase_2, finalMods.increase_3)
-    * damageTakenIncrease(enemy.damage_taken_increase)
-    * damageTakenReduction(enemy.damage_taken_reduction);
+  return defenseMultiplier(
+      enemy.level || 95,
+      enemy.defense_ignore || 0,
+      enemy.defense_penetration || 0
+    )
+    * resistanceMultiplier(
+      enemy.resistance || 0,
+      enemy.resistance_penetration || 0
+    )
+    * finalDamageMultiplier(
+      finalMods.increase_1 || 0,
+      finalMods.increase_2 || 0,
+      finalMods.increase_3 || 0
+    )
+    * damageTakenIncrease(enemy.damage_taken_increase || 0)
+    * damageTakenReduction(enemy.damage_taken_reduction || 0);
 }
 function normalDamage(character, enemy, skill, finalMods, extras={}) {
   const base = character.attack*skill.attack_ratio
