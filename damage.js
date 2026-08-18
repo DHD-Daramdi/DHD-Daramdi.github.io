@@ -40,7 +40,7 @@ function normalDamage(character, enemy, skill, finalMods, extras={}) {
     + character.defense*skill.defense_ratio;
   const crit = 1 + character.crit_damage;
   const expectedCrit = 1 + character.crit_rate*character.crit_damage;
-  const skillMult = 1 + skill.damage_bonus;
+  const skillMult = 1;
   const common = commonMultipliers(enemy, finalMods);
   const special = 1 + (extras.confirmed_damage || 0);
   const normal = base*skillMult*common*special;
