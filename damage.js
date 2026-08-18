@@ -597,7 +597,7 @@ function superBreakDamage(
   // 슈퍼 격파 계수
   const superBreakMultiplier =
     1.0 +
-    (bs.super_break_multiplier || 0);
+    (extras.super_break_multiplier || 0);
 
   // 공통
   const common =
