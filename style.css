@@ -214,3 +214,145 @@ header {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   모바일 전용
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body {
+    background-attachment: scroll;
+  }
+
+  header {
+    padding: 18px 12px;
+  }
+
+  header h1 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  header p {
+    font-size: 11px;
+  }
+
+  main {
+    padding: 8px;
+  }
+
+  /* 입력 / 결과를 완전한 1열로 */
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* 입력창 */
+  .input-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* 각 패널 여백 축소 */
+  .panel {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .panel h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* 한 패널 내부의 입력은 2열 */
+  #enemyFields,
+  #char1Fields,
+  #char2Fields,
+  #char3Fields,
+  #char4Fields,
+  #damageFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .field {
+    min-width: 0;
+  }
+
+  .field label {
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .field input,
+  .field select {
+    padding: 7px 6px;
+    font-size: 14px;
+  }
+
+  /* 결과창 */
+  .result-side {
+    position: static;
+    width: 100%;
+  }
+
+  .result-side .actions {
+    margin: 0 0 10px;
+  }
+
+  .result-side .primary {
+    width: 100%;
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .result {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .result-main {
+    font-size: 28px;
+  }
+
+  .result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .result-item {
+    padding: 8px;
+  }
+
+  .result-item span {
+    font-size: 11px;
+  }
+
+  .result-item strong {
+    font-size: 15px;
+  }
+
+  /* 저장 도구도 모바일에 맞춤 */
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .toolbar label {
+    grid-column: 1 / -1;
+  }
+
+  .toolbar input,
+  .toolbar select {
+    width: 100%;
+  }
+
+  .toolbar button {
+    width: 100%;
+  }
+}
