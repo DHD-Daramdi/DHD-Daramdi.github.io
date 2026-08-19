@@ -39,6 +39,11 @@ function defenseMultiplier(
   defenseIgnore,
   defensePenetration
 ) {
+  const cappedEnemyLevel = Math.min(
+    enemyLevel || 100,
+    100
+  );
+
   const totalIgnore = Math.min(
     (defenseIgnore || 0) + (defensePenetration || 0),
     1.0
@@ -49,7 +54,7 @@ function defenseMultiplier(
 
   const denominator =
     numerator +
-    (enemyLevel + 20.0) *
+    (cappedEnemyLevel + 20.0) *
     (1.0 - totalIgnore);
 
   return numerator / denominator;
@@ -72,12 +77,23 @@ function resistanceMultiplier(
     (resistance || 0) -
     (penetration || 0);
 
-  return Math.min(
-    1.0 - effectiveResistance,
-    2.0
+  const coefficient =
+    Math.min(
+      1.0 - effectiveResistance,
+      2.0
+    );
+
+  return Math.max(
+    coefficient,
+    0.1
   );
 }
 
+//격파 상태 or 비격파 상태. 강인성 계수
+
+function weaknessBreakMultiplier(isBroken) {
+  return isBroken === "YES" ? 1.0 : 0.9;
+}
 
 // ------------------------------------------------------------
 // 받는 피해 증가
@@ -186,6 +202,9 @@ function commonMultipliers(
     enemy.resistance_penetration
   );
 
+  const weaknessBreak =
+  weaknessBreakMultiplier(enemy.is_broken);
+
   const damageTakenReductionMultiplier = damageTakenReduction(
   enemy.damage_taken_reduction,
   enemy.damage_taken_reduction_2,
@@ -207,7 +226,8 @@ function commonMultipliers(
     resistance *
     damageTakenReductionMultipler *
     confirmed *
-    finalDamage;
+    finalDamage*
+    weaknessBreak;
 
   return {
     multiplier,
@@ -215,6 +235,8 @@ function commonMultipliers(
     defense_multiplier: defense,
 
     resistance_multiplier: resistance,
+    
+    weakness_break_multiplier: weaknessBreak,
 
     damage_taken_reduction_multiplier:
       damageReductionMultiplier,
