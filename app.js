@@ -85,6 +85,7 @@ const FIELD_GROUPS = {
 // ============================================================
 
 lightcone: [
+  ["enabled","적용","checkbox",false],
   ["attack_base","광추 기초 공격력","number",0],
   ["hp_base","광추 기초 HP","number",0],
   ["defense_base","광추 기초 방어력","number",0],
@@ -293,7 +294,12 @@ function createFields(containerId, fields, prefix) {
 // 캐릭터 섹션 필드 생성
 // ============================================================
 
-function createCharacterFields(containerId, groups, prefix) {
+function createCharacterFields(
+  containerId,
+  groups,
+  prefix,
+  lightcones = []
+) {
   const root = document.getElementById(containerId);
   if (!root) return;
 
@@ -301,16 +307,21 @@ function createCharacterFields(containerId, groups, prefix) {
 
   const sections = [
     ["common", "공통", groups.common, true],
+
+    ...lightcones,
+
     ["normal", "일반", groups.normal, false],
     ["break", "격파 / 슈퍼 격파", groups.break, false],
     ["elation", "환락", groups.elation, false]
   ];
 
   for (const [key, title, fields, open] of sections) {
+    if (!fields) continue;
+
     const details = document.createElement("details");
     details.className = "character-section";
     details.dataset.section = key;
-    details.open = open;
+    details.open = Boolean(open);
 
     const summary = document.createElement("summary");
     summary.textContent = title;
@@ -330,36 +341,6 @@ function createCharacterFields(containerId, groups, prefix) {
   }
 }
 
-//광추 입력 함수
-
-function createLightconeSection(
-  containerId,
-  fields,
-  prefix,
-  title
-) {
-  const root = document.getElementById(containerId);
-  if (!root) return;
-
-  const details = document.createElement("details");
-  details.className = "character-section";
-
-  const summary = document.createElement("summary");
-  summary.textContent = title;
-
-  const fieldsRoot = document.createElement("div");
-  fieldsRoot.className = "section-fields";
-  fieldsRoot.id = `${prefix}_fields`;
-
-  details.append(summary, fieldsRoot);
-  root.appendChild(details);
-
-  createFields(
-    fieldsRoot.id,
-    fields,
-    prefix
-  );
-}
 
 
 // ============================================================
@@ -410,8 +391,12 @@ function readGroup(fields, prefix) {
     const el = document.getElementById(`${prefix}_${key}`);
     if (!el) continue;
 
-    if (type === "select") {
+    if (type === "checkbox") {
+      out[key] = el.checked;
+
+    } else if (type === "select") {
       out[key] = el.value;
+
     } else {
       out[key] =
         type === "percent"
@@ -422,7 +407,6 @@ function readGroup(fields, prefix) {
 
   return out;
 }
-
 
 // ============================================================
 // 캐릭터 섹션 읽기
@@ -450,17 +434,25 @@ function writeGroup(fields, prefix, obj) {
     const value = obj?.[key];
 
     if (value === undefined) {
-      el.value = def;
+      if (type === "checkbox") {
+        el.checked = Boolean(def);
+      } else {
+        el.value = def;
+      }
       continue;
     }
 
-    el.value =
-      type === "percent"
-        ? num(value) * 100
-        : value;
+    if (type === "checkbox") {
+      el.checked = Boolean(value);
+
+    } else {
+      el.value =
+        type === "percent"
+          ? num(value) * 100
+          : value;
+    }
   }
 }
-
 
 // ============================================================
 // 캐릭터 섹션 저장값 불러오기
@@ -495,14 +487,15 @@ function collect() {
   );
 
   // 캐릭터 기초 스탯 + 광추 기초 스탯
-  character1.attack_base +=
-    character1.lightcone_attack_base;
+  const lightcone1 = readGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone1"
+  );
 
-  character1.hp_base +=
-    character1.lightcone_hp_base;
-
-  character1.defense_base +=
-    character1.lightcone_defense_base;
+  const lightcone2 = readGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone2"
+  );
 
 
   const character2 = readCharacterGroup(
@@ -543,6 +536,9 @@ function collect() {
     character2,
     character3,
     character4,
+
+    lightcone1,
+    lightcone2,
 
     buff2Enabled:
       document.getElementById("buff2Enabled").checked,
@@ -1594,9 +1590,22 @@ createCharacterFields(
     break: FIELD_GROUPS.char1_break,
     elation: FIELD_GROUPS.char1_elation
   },
-  "c1"
+  "c1",
+  [
+    [
+      "lightcone1",
+      "광추 1",
+      FIELD_GROUPS.lightcone,
+      false
+    ],
+    [
+      "lightcone2",
+      "광추 2",
+      FIELD_GROUPS.lightcone,
+      false
+    ]
+  ]
 );
-
 
 createCharacterFields(
   "char2Fields",
