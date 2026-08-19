@@ -31,10 +31,6 @@ const FIELD_GROUPS = {
     ["hp_base", "캐릭터 기초 HP", "number", 0],
     ["defense_base", "캐릭터 기초 방어력", "number", 0],
 
-    ["lightcone_attack_base", "광추 기초 공격력", "number", 0],
-    ["lightcone_hp_base", "광추 기초 HP", "number", 0],
-    ["lightcone_defense_base", "광추 기초 방어력", "number", 0],
-
     ["attack_percent", "공격력 (%)", "percent", 0],
     ["hp_percent", "HP (%)", "percent", 0],
     ["defense_percent", "방어력 (%)", "percent", 0],
@@ -82,6 +78,50 @@ const FIELD_GROUPS = {
     ["elation", "환락도 (%)", "percent", 0],
     ["laugh_points", "웃음 포인트", "number", 0]
   ],
+
+  // ============================================================
+// 광추 1 / 2
+// 기초 스탯 + 광추 효과
+// ============================================================
+
+lightcone: [
+  ["attack_base","광추 기초 공격력","number",0],
+  ["hp_base","광추 기초 HP","number",0],
+  ["defense_base","광추 기초 방어력","number",0],
+
+  ["attack_percent","공격력 (%)","percent",0],
+  ["hp_percent","HP (%)","percent",0],
+  ["defense_percent","방어력 (%)","percent",0],
+
+  ["attack_flat","깡 공격력","number",0],
+  ["hp_flat","깡 HP","number",0],
+  ["defense_flat","깡 방어력","number",0],
+
+  ["speed_percent","속도 (%)","percent",0],
+  ["speed_flat","깡 속도","number",0],
+  ["base_speed_increase","기초 속도 증가","number",0],
+
+  ["crit_rate","치명타 확률 (%)","percent",0],
+  ["crit_damage","치명타 피해 (%)","percent",0],
+
+  ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
+  ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
+
+  ["defense_ignore","방어력 무시 (%)","percent",0],
+  ["defense_penetration","방어력 감소 (%)","percent",0],
+  ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
+
+  ["confirmed_damage","확정 피해 (%)","percent",0],
+
+  ["elation_increase","증소 (%)","percent",0],
+
+  ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
+  ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
+  ["break_effect","격파 특수효과 (%)","percent",0],
+
+  ["elation","환락도 (%)","percent",0],
+  ["laugh_points","웃음 포인트","number",0]
+],
 
   // ============================================================
   // 캐릭터 2~4 : 공통
@@ -178,8 +218,13 @@ function createFields(containerId, fields, prefix) {
     lab.textContent = label;
 
     let input;
+    
+    if (type === "checkbox") {
+      input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = Boolean(def);
 
-    if (type === "select") {
+    } else if (type === "select") {
       input = document.createElement("select");
 
       if (key === "damageType") {
@@ -232,9 +277,15 @@ function createFields(containerId, fields, prefix) {
 
     input.id = `${prefix}_${key}`;
 
-    row.append(lab, input);
-    root.appendChild(row);
-  }
+    if (type === "checkbox") {
+     row.classList.add("checkbox-field");
+     row.append(input, lab);
+   } else {
+     row.append(lab, input);
+      }
+
+   root.appendChild(row);
+     }
 }
 
 
@@ -277,6 +328,37 @@ function createCharacterFields(containerId, groups, prefix) {
       `${prefix}_${key}`
     );
   }
+}
+
+//광추 입력 함수
+
+function createLightconeSection(
+  containerId,
+  fields,
+  prefix,
+  title
+) {
+  const root = document.getElementById(containerId);
+  if (!root) return;
+
+  const details = document.createElement("details");
+  details.className = "character-section";
+
+  const summary = document.createElement("summary");
+  summary.textContent = title;
+
+  const fieldsRoot = document.createElement("div");
+  fieldsRoot.className = "section-fields";
+  fieldsRoot.id = `${prefix}_fields`;
+
+  details.append(summary, fieldsRoot);
+  root.appendChild(details);
+
+  createFields(
+    fieldsRoot.id,
+    fields,
+    prefix
+  );
 }
 
 
