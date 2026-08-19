@@ -200,6 +200,137 @@ lightcone: [
   ]
 };
 
+// ============================================================
+// 결과 비교 슬롯
+// ============================================================
+
+const resultSlots = {
+  1: null,
+  2: null,
+  3: null
+};
+
+function saveResultSlot(slot, result, damageType) {
+  const value =
+    result.expected_damage ??
+    result.final_damage ??
+    result.crit_damage ??
+    0;
+
+  resultSlots[slot] = {
+    value: Number(value) || 0,
+    damageType
+  };
+
+  renderComparison();
+}
+
+// ============================================================
+// 결과 비교
+// ============================================================
+
+function compareResults(value1, value2) {
+  const absolute = value2 - value1;
+
+  const percent =
+    value1 === 0
+      ? 0
+      : (absolute / value1) * 100;
+
+  return {
+    absolute,
+    percent
+  };
+}
+
+function renderComparison() {
+  const container =
+    document.getElementById("resultComparison");
+
+  if (!container) return;
+
+  const r1 = resultSlots[1];
+  const r2 = resultSlots[2];
+  const r3 = resultSlots[3];
+
+  let html = `
+    <h3 class="result-section-title">
+      결과 비교
+    </h3>
+
+    <div class="comparison-results">
+  `;
+
+  for (const slot of [1, 2, 3]) {
+    const result = resultSlots[slot];
+
+    html += `
+      <div class="comparison-result-item">
+        <span>결과 ${slot}</span>
+        <strong>
+          ${
+            result
+              ? fmt(result.value)
+              : "-"
+          }
+        </strong>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+
+  const pairs = [
+    [1, 2],
+    [1, 3],
+    [2, 3]
+  ];
+
+  html += `
+    <div class="comparison-differences">
+  `;
+
+  for (const [a, b] of pairs) {
+    const first = resultSlots[a];
+    const second = resultSlots[b];
+
+    if (!first || !second) {
+      continue;
+    }
+
+    const diff =
+      compareResults(
+        first.value,
+        second.value
+      );
+
+    const sign =
+      diff.absolute > 0
+        ? "+"
+        : "";
+
+    html += `
+      <div class="comparison-difference">
+        <span>결과 ${a} → 결과 ${b}</span>
+
+        <strong>
+          ${sign}${fmt(diff.absolute)}
+        </strong>
+
+        <em>
+          ${sign}${diff.percent.toFixed(2)}%
+        </em>
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
 
 // ============================================================
 // 입력 필드 생성
@@ -579,7 +710,7 @@ function collect() {
 // 계산
 // ============================================================
 
-function calculate() {
+function calculate(slot = null) {
   const data = collect();
 
   const pool =
@@ -771,6 +902,13 @@ function calculate() {
     stats,
     pool,
     enemy,
+    damage.damageType
+  );
+  
+  if (slot !== null) {
+  saveResultSlot(
+    slot,
+    result,
     damage.damageType
   );
 }
@@ -1426,6 +1564,19 @@ function loadCurrent() {
     data.character1
   );
 
+  writeGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone1",
+    data.lightcone1
+  );
+
+
+  writeGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone2",
+    data.lightcone2
+  );
+
 
   writeCharacterGroup(
     {
@@ -1695,3 +1846,21 @@ document.getElementById(
   "resetBtn"
 ).onclick =
   resetAll;
+
+document.getElementById(
+  "saveResult1Btn"
+).onclick = () => {
+  calculate(1);
+};
+
+document.getElementById(
+  "saveResult2Btn"
+).onclick = () => {
+  calculate(2);
+};
+
+document.getElementById(
+  "saveResult3Btn"
+).onclick = () => {
+  calculate(3);
+};
