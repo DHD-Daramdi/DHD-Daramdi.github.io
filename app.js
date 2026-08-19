@@ -31,10 +31,6 @@ const FIELD_GROUPS = {
     ["hp_base", "캐릭터 기초 HP", "number", 0],
     ["defense_base", "캐릭터 기초 방어력", "number", 0],
 
-    ["lightcone_attack_base", "광추 기초 공격력", "number", 0],
-    ["lightcone_hp_base", "광추 기초 HP", "number", 0],
-    ["lightcone_defense_base", "광추 기초 방어력", "number", 0],
-
     ["attack_percent", "공격력 (%)", "percent", 0],
     ["hp_percent", "HP (%)", "percent", 0],
     ["defense_percent", "방어력 (%)", "percent", 0],
@@ -82,6 +78,51 @@ const FIELD_GROUPS = {
     ["elation", "환락도 (%)", "percent", 0],
     ["laugh_points", "웃음 포인트", "number", 0]
   ],
+
+  // ============================================================
+// 광추 1 / 2
+// 기초 스탯 + 광추 효과
+// ============================================================
+
+lightcone: [
+  ["enabled","적용","checkbox",false],
+  ["attack_base","광추 기초 공격력","number",0],
+  ["hp_base","광추 기초 HP","number",0],
+  ["defense_base","광추 기초 방어력","number",0],
+
+  ["attack_percent","공격력 (%)","percent",0],
+  ["hp_percent","HP (%)","percent",0],
+  ["defense_percent","방어력 (%)","percent",0],
+
+  ["attack_flat","깡 공격력","number",0],
+  ["hp_flat","깡 HP","number",0],
+  ["defense_flat","깡 방어력","number",0],
+
+  ["speed_percent","속도 (%)","percent",0],
+  ["speed_flat","깡 속도","number",0],
+  ["base_speed_increase","기초 속도 증가","number",0],
+
+  ["crit_rate","치명타 확률 (%)","percent",0],
+  ["crit_damage","치명타 피해 (%)","percent",0],
+
+  ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
+  ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
+
+  ["defense_ignore","방어력 무시 (%)","percent",0],
+  ["defense_penetration","방어력 감소 (%)","percent",0],
+  ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
+
+  ["confirmed_damage","확정 피해 (%)","percent",0],
+
+  ["elation_increase","증소 (%)","percent",0],
+
+  ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
+  ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
+  ["break_effect","격파 특수효과 (%)","percent",0],
+
+  ["elation","환락도 (%)","percent",0],
+  ["laugh_points","웃음 포인트","number",0]
+],
 
   // ============================================================
   // 캐릭터 2~4 : 공통
@@ -159,6 +200,152 @@ const FIELD_GROUPS = {
   ]
 };
 
+// ============================================================
+// 결과 비교 슬롯
+// ============================================================
+
+const resultSlots = {
+  1: null,
+  2: null,
+  3: null
+};
+
+function saveResultSlot(slot, result, damageType) {
+  const value =
+    result.expected_damage ??
+    result.final_damage ??
+    result.crit_damage ??
+    0;
+
+  const saveName =
+    document.getElementById("saveName")?.value.trim() || "";
+
+  resultSlots[slot] = {
+    value: Number(value) || 0,
+    damageType,
+    saveName
+  };
+
+  renderComparison();
+}
+
+// ============================================================
+// 결과 비교
+// ============================================================
+
+function compareResults(value1, value2) {
+  const absolute = value2 - value1;
+
+  const percent =
+    value1 === 0
+      ? 0
+      : (absolute / value1) * 100;
+
+  return {
+    absolute,
+    percent
+  };
+}
+
+function renderComparison() {
+  const container =
+    document.getElementById("resultComparison");
+
+  if (!container) return;
+
+  const r1 = resultSlots[1];
+  const r2 = resultSlots[2];
+  const r3 = resultSlots[3];
+
+  let html = `
+    <h3 class="result-section-title">
+      결과 비교
+    </h3>
+
+    <div class="comparison-results">
+  `;
+
+  for (const slot of [1, 2, 3]) {
+  const result = resultSlots[slot];
+
+  html += `
+    <div class="comparison-result-item">
+      <span>결과 ${slot}</span>
+
+      ${
+        result?.saveName
+          ? `
+            <small>
+              ${result.saveName}
+            </small>
+          `
+          : ""
+      }
+
+      <strong>
+        ${
+          result
+            ? fmt(result.value)
+            : "-"
+        }
+      </strong>
+    </div>
+  `;
+}
+
+  html += `</div>`;
+
+  const pairs = [
+    [1, 2],
+    [1, 3],
+    [2, 3]
+  ];
+
+  html += `
+    <div class="comparison-differences">
+  `;
+
+  for (const [a, b] of pairs) {
+    const first = resultSlots[a];
+    const second = resultSlots[b];
+
+    if (!first || !second) {
+      continue;
+    }
+
+    const diff =
+      compareResults(
+        first.value,
+        second.value
+      );
+
+    const sign =
+      diff.absolute > 0
+        ? "+"
+        : "";
+
+    html += `
+      <div class="comparison-difference">
+        <span>결과 ${a} → 결과 ${b}</span>
+
+        <strong>
+          ${sign}${fmt(diff.absolute)}
+        </strong>
+
+        <em>
+          ${sign}${diff.percent.toFixed(2)}%
+        </em>
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
 
 // ============================================================
 // 입력 필드 생성
@@ -178,8 +365,13 @@ function createFields(containerId, fields, prefix) {
     lab.textContent = label;
 
     let input;
+    
+    if (type === "checkbox") {
+      input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = Boolean(def);
 
-    if (type === "select") {
+    } else if (type === "select") {
       input = document.createElement("select");
 
       if (key === "damageType") {
@@ -232,9 +424,15 @@ function createFields(containerId, fields, prefix) {
 
     input.id = `${prefix}_${key}`;
 
-    row.append(lab, input);
-    root.appendChild(row);
-  }
+    if (type === "checkbox") {
+     row.classList.add("checkbox-field");
+     row.append(input, lab);
+   } else {
+     row.append(lab, input);
+      }
+
+   root.appendChild(row);
+     }
 }
 
 
@@ -242,7 +440,12 @@ function createFields(containerId, fields, prefix) {
 // 캐릭터 섹션 필드 생성
 // ============================================================
 
-function createCharacterFields(containerId, groups, prefix) {
+function createCharacterFields(
+  containerId,
+  groups,
+  prefix,
+  lightcones = []
+) {
   const root = document.getElementById(containerId);
   if (!root) return;
 
@@ -250,16 +453,21 @@ function createCharacterFields(containerId, groups, prefix) {
 
   const sections = [
     ["common", "공통", groups.common, true],
+
+    ...lightcones,
+
     ["normal", "일반", groups.normal, false],
     ["break", "격파 / 슈퍼 격파", groups.break, false],
     ["elation", "환락", groups.elation, false]
   ];
 
   for (const [key, title, fields, open] of sections) {
+    if (!fields) continue;
+
     const details = document.createElement("details");
     details.className = "character-section";
     details.dataset.section = key;
-    details.open = open;
+    details.open = Boolean(open);
 
     const summary = document.createElement("summary");
     summary.textContent = title;
@@ -278,6 +486,7 @@ function createCharacterFields(containerId, groups, prefix) {
     );
   }
 }
+
 
 
 // ============================================================
@@ -328,8 +537,12 @@ function readGroup(fields, prefix) {
     const el = document.getElementById(`${prefix}_${key}`);
     if (!el) continue;
 
-    if (type === "select") {
+    if (type === "checkbox") {
+      out[key] = el.checked;
+
+    } else if (type === "select") {
       out[key] = el.value;
+
     } else {
       out[key] =
         type === "percent"
@@ -340,7 +553,6 @@ function readGroup(fields, prefix) {
 
   return out;
 }
-
 
 // ============================================================
 // 캐릭터 섹션 읽기
@@ -368,17 +580,25 @@ function writeGroup(fields, prefix, obj) {
     const value = obj?.[key];
 
     if (value === undefined) {
-      el.value = def;
+      if (type === "checkbox") {
+        el.checked = Boolean(def);
+      } else {
+        el.value = def;
+      }
       continue;
     }
 
-    el.value =
-      type === "percent"
-        ? num(value) * 100
-        : value;
+    if (type === "checkbox") {
+      el.checked = Boolean(value);
+
+    } else {
+      el.value =
+        type === "percent"
+          ? num(value) * 100
+          : value;
+    }
   }
 }
-
 
 // ============================================================
 // 캐릭터 섹션 저장값 불러오기
@@ -413,14 +633,15 @@ function collect() {
   );
 
   // 캐릭터 기초 스탯 + 광추 기초 스탯
-  character1.attack_base +=
-    character1.lightcone_attack_base;
+  const lightcone1 = readGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone1"
+  );
 
-  character1.hp_base +=
-    character1.lightcone_hp_base;
-
-  character1.defense_base +=
-    character1.lightcone_defense_base;
+  const lightcone2 = readGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone2"
+  );
 
 
   const character2 = readCharacterGroup(
@@ -462,6 +683,9 @@ function collect() {
     character3,
     character4,
 
+    lightcone1,
+    lightcone2,
+
     buff2Enabled:
       document.getElementById("buff2Enabled").checked,
 
@@ -501,7 +725,7 @@ function collect() {
 // 계산
 // ============================================================
 
-function calculate() {
+function calculate(slot = null) {
   const data = collect();
 
   const pool =
@@ -695,8 +919,15 @@ function calculate() {
     enemy,
     damage.damageType
   );
+  
+  if (slot !== null) {
+  saveResultSlot(
+    slot,
+    result,
+    damage.damageType
+  );
 }
-
+}
 
 // ============================================================
 // 숫자 표시
@@ -1348,6 +1579,19 @@ function loadCurrent() {
     data.character1
   );
 
+  writeGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone1",
+    data.lightcone1
+  );
+
+
+  writeGroup(
+    FIELD_GROUPS.lightcone,
+    "c1_lightcone2",
+    data.lightcone2
+  );
+
 
   writeCharacterGroup(
     {
@@ -1512,9 +1756,22 @@ createCharacterFields(
     break: FIELD_GROUPS.char1_break,
     elation: FIELD_GROUPS.char1_elation
   },
-  "c1"
+  "c1",
+  [
+    [
+      "lightcone1",
+      "광추 1",
+      FIELD_GROUPS.lightcone,
+      false
+    ],
+    [
+      "lightcone2",
+      "광추 2",
+      FIELD_GROUPS.lightcone,
+      false
+    ]
+  ]
 );
-
 
 createCharacterFields(
   "char2Fields",
@@ -1604,3 +1861,21 @@ document.getElementById(
   "resetBtn"
 ).onclick =
   resetAll;
+
+document.getElementById(
+  "saveResult1Btn"
+).onclick = () => {
+  calculate(1);
+};
+
+document.getElementById(
+  "saveResult2Btn"
+).onclick = () => {
+  calculate(2);
+};
+
+document.getElementById(
+  "saveResult3Btn"
+).onclick = () => {
+  calculate(3);
+};

@@ -22,9 +22,14 @@ function makePool() {
     break_effect:0, elation:0, laugh_points:0
   };
 }
-function addPool(a,b) {
-  for (const k of Object.keys(a)) a[k] += num(b[k]);
+
+function addPool(a, b) {
+  for (const k of Object.keys(a)) {
+    if (k === "enabled") continue;
+    a[k] += num(b[k]);
+  }
 }
+
 function finalStats(pool) {
   return {
     attack:pool.attack_base*(1+pool.attack_percent)+pool.attack_flat,
@@ -34,11 +39,31 @@ function finalStats(pool) {
     crit_damage:pool.crit_damage
   };
 }
+
 function buildFinalPool(data) {
   const p = makePool();
+
   addPool(p, data.character1);
-  if (data.buff2Enabled) addPool(p, data.character2);
-  if (data.buff3Enabled) addPool(p, data.character3);
-  if (data.buff4Enabled) addPool(p, data.character4);
+
+  if (data.lightcone1?.enabled) {
+    addPool(p, data.lightcone1);
+  }
+
+  if (data.lightcone2?.enabled) {
+    addPool(p, data.lightcone2);
+  }
+
+  if (data.buff2Enabled) {
+    addPool(p, data.character2);
+  }
+
+  if (data.buff3Enabled) {
+    addPool(p, data.character3);
+  }
+
+  if (data.buff4Enabled) {
+    addPool(p, data.character4);
+  }
+
   return p;
 }
