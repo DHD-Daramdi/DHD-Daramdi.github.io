@@ -1,114 +1,139 @@
 const FIELD_GROUPS = {
+  // ============================================================
+  // 적
+  // ============================================================
+
   enemy: [
-    ["level","적 레벨","number",95],
-    ["resistance","속성 저항 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
-    ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 감소 (%)","percent",0],
-    ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
-   
-    ["damage_taken_reduction","받는 피해 감소 1 (%)","percent",0],
-    ["damage_taken_reduction_2","받는 피해 감소 2 (%)","percent",0],
-    ["damage_taken_reduction_3","받는 피해 감소 3 (%)","percent",0],
-   
-    ["dealt_damage_reduction_1","가하는 피해 감소 1 (%)","percent",0],
-    ["dealt_damage_reduction_2","가하는 피해 감소 2 (%)","percent",0],
-    ["dealt_damage_reduction_3","가하는 피해 감소 3 (%)","percent",0],
+    ["level", "적 레벨", "number", 95],
+    ["resistance", "속성 저항 (%)", "percent", 0],
+    ["resistance_penetration", "속성 저항 관통/감소 (%)", "percent", 0],
+    ["defense_ignore", "방어력 무시 (%)", "percent", 0],
+    ["defense_penetration", "방어력 감소 (%)", "percent", 0],
+    ["damage_taken_increase", "받는 피해 증가 (%)", "percent", 0],
 
-    ["is_broken","약점 격파 상태","select","NO"]
+    ["damage_taken_reduction", "받는 피해 감소 1 (%)", "percent", 0],
+    ["damage_taken_reduction_2", "받는 피해 감소 2 (%)", "percent", 0],
+    ["damage_taken_reduction_3", "받는 피해 감소 3 (%)", "percent", 0],
+
+    ["dealt_damage_reduction_1", "가하는 피해 감소 1 (%)", "percent", 0],
+    ["dealt_damage_reduction_2", "가하는 피해 감소 2 (%)", "percent", 0],
+    ["dealt_damage_reduction_3", "가하는 피해 감소 3 (%)", "percent", 0],
+
+    ["is_broken", "약점 격파 상태", "select", "NO"]
   ],
 
   // ============================================================
-  // 캐릭터 1 : 실제 계산 대상
+  // 캐릭터 1 : 공통
   // ============================================================
 
-  char1: [
-    ["attack_base","캐릭터 기초 공격력","number",0],
-    ["hp_base","캐릭터 기초 HP","number",0],
-    ["defense_base","캐릭터 기초 방어력","number",0],
+  char1_common: [
+    ["attack_base", "캐릭터 기초 공격력", "number", 0],
+    ["hp_base", "캐릭터 기초 HP", "number", 0],
+    ["defense_base", "캐릭터 기초 방어력", "number", 0],
 
-    ["lightcone_attack_base","광추 기초 공격력","number",0],
-    ["lightcone_hp_base","광추 기초 HP","number",0],
-    ["lightcone_defense_base","광추 기초 방어력","number",0],
+    ["lightcone_attack_base", "광추 기초 공격력", "number", 0],
+    ["lightcone_hp_base", "광추 기초 HP", "number", 0],
+    ["lightcone_defense_base", "광추 기초 방어력", "number", 0],
 
-    ["attack_percent","공격력 (%)","percent",0],
-    ["hp_percent","HP (%)","percent",0],
-    ["defense_percent","방어력 (%)","percent",0],
+    ["attack_percent", "공격력 (%)", "percent", 0],
+    ["hp_percent", "HP (%)", "percent", 0],
+    ["defense_percent", "방어력 (%)", "percent", 0],
 
-    ["attack_flat","깡 공격력","number",0],
-    ["hp_flat","깡 HP","number",0],
-    ["defense_flat","깡 방어력","number",0],
+    ["attack_flat", "깡 공격력", "number", 0],
+    ["hp_flat", "깡 HP", "number", 0],
+    ["defense_flat", "깡 방어력", "number", 0],
 
-    ["crit_rate","치명타 확률 (%)","percent",0],
-    ["crit_damage","치명타 피해 (%)","percent",0],
+    ["crit_rate", "치명타 확률 (%)", "percent", 0],
+    ["crit_damage", "치명타 피해 (%)", "percent", 0],
 
-    // 일반 데미지 전용
-    ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
+    ["damage_taken_increase", "적 받는 피해 증가 (%)", "percent", 0],
 
-    // 적에게 적용되는 버프
-    ["damage_taken_increase","적 받는 피해 증가 (%)","percent",0],
+    ["defense_ignore", "방어력 무시 (%)", "percent", 0],
+    ["defense_penetration", "방어력 감소 (%)", "percent", 0],
+    ["resistance_penetration", "속성 저항 관통/감소 (%)", "percent", 0],
 
-    ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 감소 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
-
-    // 모든 데미지 타입
-    ["confirmed_damage","확정 피해 (%)","percent",0],
-
-    // 환락 전용
-    ["elation_increase","증소 (%)","percent",0],
-
-    // 격파 / 슈퍼 격파 전용
-    ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
-    ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
-    ["break_effect","격파 특수효과 (%)","percent",0],
-
-    // 환락
-    ["elation","환락도 (%)","percent",0],
-    ["laugh_points","웃음 포인트","number",0]
+    ["confirmed_damage", "확정 피해 (%)", "percent", 0]
   ],
 
   // ============================================================
-  // 캐릭터 2~4 : 버프 제공자
-  // 기초/광추 기초 스탯은 입력하지 않음
+  // 캐릭터 1 : 일반
   // ============================================================
 
-  buff: [
-    ["attack_percent","공격력 (%)","percent",0],
-    ["hp_percent","HP (%)","percent",0],
-    ["defense_percent","방어력 (%)","percent",0],
+  char1_normal: [
+    ["dealt_damage_increase", "가하는 피해 증가 (%)", "percent", 0]
+  ],
 
-    ["attack_flat","깡 공격력","number",0],
-    ["hp_flat","깡 HP","number",0],
-    ["defense_flat","깡 방어력","number",0],
+  // ============================================================
+  // 캐릭터 1 : 격파 / 슈퍼 격파
+  // ============================================================
 
-    ["crit_rate","치명타 확률 (%)","percent",0],
-    ["crit_damage","치명타 피해 (%)","percent",0],
+  char1_break: [
+    ["super_break_multiplier", "슈퍼 격파 계수 (%)", "percent", 0],
+    ["break_damage_increase", "가하는 격파 피해 증가 (%)", "percent", 0],
+    ["break_effect", "격파 특수효과 (%)", "percent", 0]
+  ],
 
-    // 일반 데미지 전용
-    ["dealt_damage_increase","가하는 피해 증가 (%)","percent",0],
+  // ============================================================
+  // 캐릭터 1 : 환락
+  // ============================================================
 
-    // 적에게 적용되는 버프
-    ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
+  char1_elation: [
+    ["elation_increase", "증소 (%)", "percent", 0],
+    ["elation", "환락도 (%)", "percent", 0],
+    ["laugh_points", "웃음 포인트", "number", 0]
+  ],
 
-    ["defense_ignore","방어력 무시 (%)","percent",0],
-    ["defense_penetration","방어력 감소 (%)","percent",0],
-    ["resistance_penetration","속성 저항 관통/감소 (%)","percent",0],
+  // ============================================================
+  // 캐릭터 2~4 : 공통
+  // ============================================================
 
-    // 모든 데미지 타입
-    ["confirmed_damage","확정 피해 (%)","percent",0],
+  buff_common: [
+    ["attack_percent", "공격력 (%)", "percent", 0],
+    ["hp_percent", "HP (%)", "percent", 0],
+    ["defense_percent", "방어력 (%)", "percent", 0],
 
-    // 환락 전용
-    ["elation_increase","증소 (%)","percent",0],
+    ["attack_flat", "깡 공격력", "number", 0],
+    ["hp_flat", "깡 HP", "number", 0],
+    ["defense_flat", "깡 방어력", "number", 0],
 
-    // 격파 / 슈퍼 격파 전용
-    ["super_break_multiplier","슈퍼 격파 계수 (%)","percent",0],
-    ["break_damage_increase","가하는 격파 피해 증가 (%)","percent",0],
-    ["break_effect","격파 특수효과 (%)","percent",0],
+    ["crit_rate", "치명타 확률 (%)", "percent", 0],
+    ["crit_damage", "치명타 피해 (%)", "percent", 0],
 
-    // 환락
-    ["elation","환락도 (%)","percent",0],
-    ["laugh_points","웃음 포인트","number",0]
+    ["damage_taken_increase", "받는 피해 증가 (%)", "percent", 0],
+
+    ["defense_ignore", "방어력 무시 (%)", "percent", 0],
+    ["defense_penetration", "방어력 감소 (%)", "percent", 0],
+    ["resistance_penetration", "속성 저항 관통/감소 (%)", "percent", 0],
+
+    ["confirmed_damage", "확정 피해 (%)", "percent", 0]
+  ],
+
+  // ============================================================
+  // 캐릭터 2~4 : 일반
+  // ============================================================
+
+  buff_normal: [
+    ["dealt_damage_increase", "가하는 피해 증가 (%)", "percent", 0]
+  ],
+
+  // ============================================================
+  // 캐릭터 2~4 : 격파 / 슈퍼 격파
+  // ============================================================
+
+  buff_break: [
+    ["super_break_multiplier", "슈퍼 격파 계수 (%)", "percent", 0],
+    ["break_damage_increase", "가하는 격파 피해 증가 (%)", "percent", 0],
+    ["break_effect", "격파 특수효과 (%)", "percent", 0]
+  ],
+
+  // ============================================================
+  // 캐릭터 2~4 : 환락
+  // ============================================================
+
+  buff_elation: [
+    ["elation_increase", "증소 (%)", "percent", 0],
+    ["elation", "환락도 (%)", "percent", 0],
+    ["laugh_points", "웃음 포인트", "number", 0]
   ],
 
   // ============================================================
@@ -116,22 +141,21 @@ const FIELD_GROUPS = {
   // ============================================================
 
   damage: [
-    ["damageType","데미지 타입","select","NORMAL"],
+    ["damageType", "데미지 타입", "select", "NORMAL"],
 
-    ["attack_ratio","공격력 계수 (%)","percent",100],
-    ["hp_ratio","HP 계수 (%)","percent",0],
-    ["defense_ratio","방어력 계수 (%)","percent",0],
+    ["attack_ratio", "공격력 계수 (%)", "percent", 100],
+    ["hp_ratio", "HP 계수 (%)", "percent", 0],
+    ["defense_ratio", "방어력 계수 (%)", "percent", 0],
 
-    ["break_element","격파 속성","select","물리"],
-    ["toughness_damage","강인성 감소 수치","number",0],
-    ["max_toughness","적 최대 강인성","number",20],
+    ["break_element", "격파 속성", "select", "물리"],
+    ["toughness_damage", "강인성 감소 수치", "number", 0],
+    ["max_toughness", "적 최대 강인성", "number", 20],
 
+    ["skill_multiplier", "환락 스킬 계수 (%)", "percent", 100],
 
-    ["skill_multiplier","환락 스킬 계수 (%)","percent",100],
-
-    ["final_damage_increase_1","최종 피해 증가 1 (%)","percent",0],
-    ["final_damage_increase_2","최종 피해 증가 2 (%)","percent",0],
-    ["final_damage_increase_3","최종 피해 증가 3 (%)","percent",0]
+    ["final_damage_increase_1", "최종 피해 증가 1 (%)", "percent", 0],
+    ["final_damage_increase_2", "최종 피해 증가 2 (%)", "percent", 0],
+    ["final_damage_increase_3", "최종 피해 증가 3 (%)", "percent", 0]
   ]
 };
 
@@ -142,6 +166,8 @@ const FIELD_GROUPS = {
 
 function createFields(containerId, fields, prefix) {
   const root = document.getElementById(containerId);
+  if (!root) return;
+
   root.innerHTML = "";
 
   for (const [key, label, type, def] of fields) {
@@ -168,17 +194,18 @@ function createFields(containerId, fields, prefix) {
           option.textContent = text;
           input.appendChild(option);
         });
-      } else if (key === "is_broken") {
 
-    [
-      ["NO", "X"],
-      ["YES", "O"]
-    ].forEach(([value, text]) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = text;
-      input.appendChild(option);
-    });
+      } else if (key === "is_broken") {
+        [
+          ["NO", "X"],
+          ["YES", "O"]
+        ].forEach(([value, text]) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = text;
+          input.appendChild(option);
+        });
+
       } else {
         [
           "물리",
@@ -212,6 +239,85 @@ function createFields(containerId, fields, prefix) {
 
 
 // ============================================================
+// 캐릭터 섹션 필드 생성
+// ============================================================
+
+function createCharacterFields(containerId, groups, prefix) {
+  const root = document.getElementById(containerId);
+  if (!root) return;
+
+  root.innerHTML = "";
+
+  const sections = [
+    ["common", "공통", groups.common, true],
+    ["normal", "일반", groups.normal, false],
+    ["break", "격파 / 슈퍼 격파", groups.break, false],
+    ["elation", "환락", groups.elation, false]
+  ];
+
+  for (const [key, title, fields, open] of sections) {
+    const details = document.createElement("details");
+    details.className = "character-section";
+    details.dataset.section = key;
+    details.open = open;
+
+    const summary = document.createElement("summary");
+    summary.textContent = title;
+
+    const fieldsRoot = document.createElement("div");
+    fieldsRoot.className = "section-fields";
+    fieldsRoot.id = `${prefix}_${key}_fields`;
+
+    details.append(summary, fieldsRoot);
+    root.appendChild(details);
+
+    createFields(
+      fieldsRoot.id,
+      fields,
+      `${prefix}_${key}`
+    );
+  }
+}
+
+
+// ============================================================
+// 데미지 타입에 따라 관련 섹션 자동 열기
+// ============================================================
+
+function updateCharacterSections() {
+  const typeElement =
+    document.getElementById("dmg_damageType");
+
+  if (!typeElement) return;
+
+  const type = typeElement.value;
+
+  const openSection =
+    type === "NORMAL"
+      ? "normal"
+      : type === "BREAK" || type === "SUPER_BREAK"
+        ? "break"
+        : "elation";
+
+  [
+    "char1Fields",
+    "char2Fields",
+    "char3Fields",
+    "char4Fields"
+  ].forEach(containerId => {
+    const root = document.getElementById(containerId);
+    if (!root) return;
+
+    root.querySelectorAll(".character-section").forEach(section => {
+      if (section.dataset.section === openSection) {
+        section.open = true;
+      }
+    });
+  });
+}
+
+
+// ============================================================
 // 그룹 읽기
 // ============================================================
 
@@ -220,6 +326,7 @@ function readGroup(fields, prefix) {
 
   for (const [key, , type] of fields) {
     const el = document.getElementById(`${prefix}_${key}`);
+    if (!el) continue;
 
     if (type === "select") {
       out[key] = el.value;
@@ -236,13 +343,26 @@ function readGroup(fields, prefix) {
 
 
 // ============================================================
+// 캐릭터 섹션 읽기
+// ============================================================
+
+function readCharacterGroup(groups, prefix) {
+  return {
+    ...readGroup(groups.common, `${prefix}_common`),
+    ...readGroup(groups.normal, `${prefix}_normal`),
+    ...readGroup(groups.break, `${prefix}_break`),
+    ...readGroup(groups.elation, `${prefix}_elation`)
+  };
+}
+
+
+// ============================================================
 // 저장값 불러오기
 // ============================================================
 
 function writeGroup(fields, prefix, obj) {
   for (const [key, , type, def] of fields) {
     const el = document.getElementById(`${prefix}_${key}`);
-
     if (!el) continue;
 
     const value = obj?.[key];
@@ -261,6 +381,18 @@ function writeGroup(fields, prefix, obj) {
 
 
 // ============================================================
+// 캐릭터 섹션 저장값 불러오기
+// ============================================================
+
+function writeCharacterGroup(groups, prefix, obj) {
+  writeGroup(groups.common, `${prefix}_common`, obj);
+  writeGroup(groups.normal, `${prefix}_normal`, obj);
+  writeGroup(groups.break, `${prefix}_break`, obj);
+  writeGroup(groups.elation, `${prefix}_elation`, obj);
+}
+
+
+// ============================================================
 // 전체 입력값 수집
 // ============================================================
 
@@ -270,8 +402,13 @@ function collect() {
     "enemy"
   );
 
-  const character1 = readGroup(
-    FIELD_GROUPS.char1,
+  const character1 = readCharacterGroup(
+    {
+      common: FIELD_GROUPS.char1_common,
+      normal: FIELD_GROUPS.char1_normal,
+      break: FIELD_GROUPS.char1_break,
+      elation: FIELD_GROUPS.char1_elation
+    },
     "c1"
   );
 
@@ -286,18 +423,33 @@ function collect() {
     character1.lightcone_defense_base;
 
 
-  const character2 = readGroup(
-    FIELD_GROUPS.buff,
+  const character2 = readCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c2"
   );
 
-  const character3 = readGroup(
-    FIELD_GROUPS.buff,
+  const character3 = readCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c3"
   );
 
-  const character4 = readGroup(
-    FIELD_GROUPS.buff,
+  const character4 = readCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c4"
   );
 
@@ -352,69 +504,75 @@ function collect() {
 function calculate() {
   const data = collect();
 
-  // 캐릭터 1~4의 버프 합산
-  const pool = buildFinalPool(data);
+  const pool =
+    buildFinalPool(data);
 
-  // 최종 캐릭터 스탯
-  const stats = finalStats(pool);
+  const stats =
+    finalStats(pool);
 
-  // 데미지 설정
-  const damage = data.damage;
+  const damage =
+    data.damage;
 
-  // 적 스탯 복사
   const enemy = {
     ...data.enemy
   };
 
+
   // ==========================================================
-  // 아군이 적에게 거는 효과
+  // 아군이 적에게 적용하는 효과
   // ==========================================================
 
-  enemy.defense_ignore = Math.min(
-    enemy.defense_ignore + pool.defense_ignore,
-    1.0
-  );
+  enemy.defense_ignore =
+    Math.min(
+      enemy.defense_ignore +
+      pool.defense_ignore,
+      1.0
+    );
 
-  enemy.defense_penetration = Math.min(
-    enemy.defense_penetration + pool.defense_penetration,
-    1.0
-  );
+  enemy.defense_penetration =
+    Math.min(
+      enemy.defense_penetration +
+      pool.defense_penetration,
+      1.0
+    );
 
   enemy.resistance_penetration =
     enemy.resistance_penetration +
     pool.resistance_penetration;
 
-  // 받는 피해 증가 최대 250%
-  enemy.damage_taken_increase = Math.min(
-    enemy.damage_taken_increase +
-    pool.damage_taken_increase,
-    2.5
-  );
+  enemy.damage_taken_increase =
+    Math.min(
+      enemy.damage_taken_increase +
+      pool.damage_taken_increase,
+      2.5
+    );
+
 
   // ==========================================================
-  // 최종 피해 증가류
-  // 서로 독립이므로 damage.js에서 각각 곱연산
+  // 최종 피해 증가
   // ==========================================================
 
   const finalMods = {
-    increase_1: damage.final_damage_increase_1,
-    increase_2: damage.final_damage_increase_2,
-    increase_3: damage.final_damage_increase_3,
+    increase_1:
+      damage.final_damage_increase_1,
+
+    increase_2:
+      damage.final_damage_increase_2,
+
+    increase_3:
+      damage.final_damage_increase_3,
 
     confirmed_damage:
       pool.confirmed_damage
   };
 
-  // ==========================================================
-  // 데미지 계산
-  // ==========================================================
 
   let result;
 
-  // ----------------------------------------------------------
+
+  // ==========================================================
   // 일반 / 치명타
-  // 가하는 피해 증가 적용
-  // ----------------------------------------------------------
+  // ==========================================================
 
   if (damage.damageType === "NORMAL") {
 
@@ -422,9 +580,14 @@ function calculate() {
       stats,
       enemy,
       {
-        attack_ratio: damage.attack_ratio,
-        hp_ratio: damage.hp_ratio,
-        defense_ratio: damage.defense_ratio
+        attack_ratio:
+          damage.attack_ratio,
+
+        hp_ratio:
+          damage.hp_ratio,
+
+        defense_ratio:
+          damage.defense_ratio
       },
       finalMods,
       {
@@ -435,11 +598,10 @@ function calculate() {
 
   }
 
-  // ----------------------------------------------------------
+
+  // ==========================================================
   // 격파
-  // 가하는 피해 증가 X
-  // 가하는 격파 피해 증가 O
-  // ----------------------------------------------------------
+  // ==========================================================
 
   else if (damage.damageType === "BREAK") {
 
@@ -464,12 +626,10 @@ function calculate() {
 
   }
 
-  // ----------------------------------------------------------
+
+  // ==========================================================
   // 슈퍼 격파
-  // 가하는 피해 증가 X
-  // 가하는 격파 피해 증가 O
-  // 슈퍼 격파 계수는 캐릭터 1~4 버프
-  // ----------------------------------------------------------
+  // ==========================================================
 
   else if (damage.damageType === "SUPER_BREAK") {
 
@@ -494,13 +654,12 @@ function calculate() {
 
   }
 
-  // ----------------------------------------------------------
-  // 환락
-  // 가하는 피해 증가 X
-  // 증소 O
-  // ----------------------------------------------------------
 
-  else if (damage.damageType === "ELATION") {
+  // ==========================================================
+  // 환락
+  // ==========================================================
+
+  else {
 
     result = elationDamage(
       {
@@ -526,8 +685,8 @@ function calculate() {
           pool.elation_increase
       }
     );
-
   }
+
 
   renderResult(
     result,
@@ -537,8 +696,6 @@ function calculate() {
     damage.damageType
   );
 }
-
-
 
 
 // ============================================================
@@ -620,27 +777,37 @@ function renderResult(
 
       <div class="result-item">
         <span>공격력</span>
-        <strong>${fmt(stats.attack)}</strong>
+        <strong>
+          ${fmt(stats.attack)}
+        </strong>
       </div>
 
       <div class="result-item">
         <span>HP</span>
-        <strong>${fmt(stats.hp)}</strong>
+        <strong>
+          ${fmt(stats.hp)}
+        </strong>
       </div>
 
       <div class="result-item">
         <span>방어력</span>
-        <strong>${fmt(stats.defense)}</strong>
+        <strong>
+          ${fmt(stats.defense)}
+        </strong>
       </div>
 
       <div class="result-item">
         <span>치명타 확률</span>
-        <strong>${pctDisplay(pool.crit_rate)}</strong>
+        <strong>
+          ${pctDisplay(pool.crit_rate)}
+        </strong>
       </div>
 
       <div class="result-item">
         <span>치명타 피해</span>
-        <strong>${pctDisplay(pool.crit_damage)}</strong>
+        <strong>
+          ${pctDisplay(pool.crit_damage)}
+        </strong>
       </div>
 
     </div>
@@ -648,7 +815,7 @@ function renderResult(
 
 
   // ==========================================================
-  // 공통 / 최종
+  // 공통 / 최종 버프
   // ==========================================================
 
   html += `
@@ -686,9 +853,23 @@ function renderResult(
       </div>
 
       <div class="result-item">
-        <span>적 받는 피해 감소</span>
+        <span>적 받는 피해 감소 1</span>
         <strong>
           ${pctDisplay(enemy.damage_taken_reduction)}
+        </strong>
+      </div>
+
+      <div class="result-item">
+        <span>적 받는 피해 감소 2</span>
+        <strong>
+          ${pctDisplay(enemy.damage_taken_reduction_2)}
+        </strong>
+      </div>
+
+      <div class="result-item">
+        <span>적 받는 피해 감소 3</span>
+        <strong>
+          ${pctDisplay(enemy.damage_taken_reduction_3)}
         </strong>
       </div>
 
@@ -713,86 +894,138 @@ function renderResult(
         </strong>
       </div>
 
+      <div class="result-item">
+        <span>약점 격파 상태</span>
+        <strong>
+          ${enemy.is_broken === "YES" ? "O" : "X"}
+        </strong>
+      </div>
+
     </div>
   `;
 
 
   // ==========================================================
-  // 타입별 버프
+  // 일반 전용
   // ==========================================================
 
-  html += `
-    <h3 class="result-section-title">
-      데미지 타입별 버프
-    </h3>
+  if (type === "NORMAL") {
+    html += `
+      <h3 class="result-section-title">
+        일반 / 치명타
+      </h3>
 
-    <div class="result-grid">
-  `;
+      <div class="result-grid">
 
+        <div class="result-item">
+          <span>가하는 피해 감소 1</span>
+          <strong>
+            ${pctDisplay(enemy.dealt_damage_reduction_1)}
+          </strong>
+        </div>
+
+        <div class="result-item">
+          <span>가하는 피해 감소 2</span>
+          <strong>
+            ${pctDisplay(enemy.dealt_damage_reduction_2)}
+          </strong>
+        </div>
+
+        <div class="result-item">
+          <span>가하는 피해 감소 3</span>
+          <strong>
+            ${pctDisplay(enemy.dealt_damage_reduction_3)}
+          </strong>
+        </div>
+
+      </div>
+    `;
+  }
+
+
+  // ==========================================================
+  // 격파 / 슈퍼 격파
+  // ==========================================================
 
   if (
     type === "BREAK" ||
     type === "SUPER_BREAK"
   ) {
     html += `
-      <div class="result-item">
-        <span>가하는 격파 피해 증가</span>
-        <strong>
-          ${pctDisplay(pool.break_damage_increase)}
-        </strong>
-      </div>
+      <h3 class="result-section-title">
+        격파 / 슈퍼 격파
+      </h3>
 
-      <div class="result-item">
-        <span>격파 특수효과</span>
-        <strong>
-          ${pctDisplay(pool.break_effect)}
-        </strong>
+      <div class="result-grid">
+
+        <div class="result-item">
+          <span>가하는 격파 피해 증가</span>
+          <strong>
+            ${pctDisplay(pool.break_damage_increase)}
+          </strong>
+        </div>
+
+        <div class="result-item">
+          <span>격파 특수효과</span>
+          <strong>
+            ${pctDisplay(pool.break_effect)}
+          </strong>
+        </div>
+
+        ${
+          type === "SUPER_BREAK"
+            ? `
+              <div class="result-item">
+                <span>슈퍼 격파 계수</span>
+                <strong>
+                  ${pctDisplay(pool.super_break_multiplier)}
+                </strong>
+              </div>
+            `
+            : ""
+        }
+
       </div>
     `;
   }
 
+
+  // ==========================================================
+  // 환락
+  // ==========================================================
 
   if (type === "ELATION") {
     html += `
-      <div class="result-item">
-        <span>증소</span>
-        <strong>
-          ${pctDisplay(pool.elation_increase)}
-        </strong>
-      </div>
+      <h3 class="result-section-title">
+        환락
+      </h3>
 
-      <div class="result-item">
-        <span>환락도</span>
-        <strong>
-          ${pctDisplay(pool.elation)}
-        </strong>
-      </div>
+      <div class="result-grid">
 
-      <div class="result-item">
-        <span>웃음 포인트</span>
-        <strong>
-          ${fmt(pool.laugh_points)}
-        </strong>
-      </div>
-    `;
-  }
+        <div class="result-item">
+          <span>증소</span>
+          <strong>
+            ${pctDisplay(pool.elation_increase)}
+          </strong>
+        </div>
 
+        <div class="result-item">
+          <span>환락도</span>
+          <strong>
+            ${pctDisplay(pool.elation)}
+          </strong>
+        </div>
 
-  if (type === "SUPER_BREAK") {
-    html += `
-      <div class="result-item">
-        <span>슈퍼 격파 계수</span>
-        <strong>
-          ${pctDisplay(damage.super_break_multiplier)}
-        </strong>
+        <div class="result-item">
+          <span>웃음 포인트</span>
+          <strong>
+            ${fmt(pool.laugh_points)}
+          </strong>
+        </div>
+
       </div>
     `;
   }
-
-
-  html += `
-    </div>
-  `;
 
 
   // ==========================================================
@@ -822,6 +1055,19 @@ function renderResult(
                 <span>가하는 피해 증가 계수</span>
                 <strong>
                   ×${fmt(result.dealt_damage_multiplier)}
+                </strong>
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          result.dealt_damage_reduction_multiplier !== undefined
+            ? `
+              <div class="result-item">
+                <span>가하는 피해 감소 계수</span>
+                <strong>
+                  ×${fmt(result.dealt_damage_reduction_multiplier)}
                 </strong>
               </div>
             `
@@ -874,6 +1120,19 @@ function renderResult(
                 <span>받는 피해 감소 계수</span>
                 <strong>
                   ×${fmt(result.damage_taken_reduction_multiplier)}
+                </strong>
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          result.weakness_break_multiplier !== undefined
+            ? `
+              <div class="result-item">
+                <span>격파 상태 계수</span>
+                <strong>
+                  ×${fmt(result.weakness_break_multiplier)}
                 </strong>
               </div>
             `
@@ -988,7 +1247,6 @@ function renderResult(
     `;
   }
 
-
   document.getElementById("result").innerHTML =
     html;
 }
@@ -1010,7 +1268,8 @@ function refreshSaves() {
   const select =
     document.getElementById("saveSelect");
 
-  const saves = saveList();
+  const saves =
+    saveList();
 
   select.innerHTML = "";
 
@@ -1037,9 +1296,11 @@ function saveCurrent() {
     return;
   }
 
-  const saves = saveList();
+  const saves =
+    saveList();
 
-  saves[name] = collect();
+  saves[name] =
+    collect();
 
   localStorage.setItem(
     "sr_damage_saves",
@@ -1068,35 +1329,61 @@ function loadCurrent() {
 
   if (!data) return;
 
+
   writeGroup(
     FIELD_GROUPS.enemy,
     "enemy",
     data.enemy
   );
 
-  writeGroup(
-    FIELD_GROUPS.char1,
+
+  writeCharacterGroup(
+    {
+      common: FIELD_GROUPS.char1_common,
+      normal: FIELD_GROUPS.char1_normal,
+      break: FIELD_GROUPS.char1_break,
+      elation: FIELD_GROUPS.char1_elation
+    },
     "c1",
     data.character1
   );
 
-  writeGroup(
-    FIELD_GROUPS.buff,
+
+  writeCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c2",
     data.character2
   );
 
-  writeGroup(
-    FIELD_GROUPS.buff,
+
+  writeCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c3",
     data.character3
   );
 
-  writeGroup(
-    FIELD_GROUPS.buff,
+
+  writeCharacterGroup(
+    {
+      common: FIELD_GROUPS.buff_common,
+      normal: FIELD_GROUPS.buff_normal,
+      break: FIELD_GROUPS.buff_break,
+      elation: FIELD_GROUPS.buff_elation
+    },
     "c4",
     data.character4
   );
+
 
   writeGroup(
     FIELD_GROUPS.damage,
@@ -1108,25 +1395,30 @@ function loadCurrent() {
   const names =
     data.names || {};
 
+
   document.getElementById(
     "enemyName"
   ).value =
     names.enemy || "";
+
 
   document.getElementById(
     "char1Name"
   ).value =
     names.character1 || "";
 
+
   document.getElementById(
     "char2Name"
   ).value =
     names.character2 || "";
 
+
   document.getElementById(
     "char3Name"
   ).value =
     names.character3 || "";
+
 
   document.getElementById(
     "char4Name"
@@ -1139,10 +1431,12 @@ function loadCurrent() {
   ).checked =
     data.buff2Enabled;
 
+
   document.getElementById(
     "buff3Enabled"
   ).checked =
     data.buff3Enabled;
+
 
   document.getElementById(
     "buff4Enabled"
@@ -1152,7 +1446,10 @@ function loadCurrent() {
 
   document.getElementById(
     "saveName"
-  ).value = name;
+  ).value =
+    name;
+
+  updateCharacterSections();
 }
 
 
@@ -1206,29 +1503,54 @@ createFields(
   "enemy"
 );
 
-createFields(
+
+createCharacterFields(
   "char1Fields",
-  FIELD_GROUPS.char1,
+  {
+    common: FIELD_GROUPS.char1_common,
+    normal: FIELD_GROUPS.char1_normal,
+    break: FIELD_GROUPS.char1_break,
+    elation: FIELD_GROUPS.char1_elation
+  },
   "c1"
 );
 
-createFields(
+
+createCharacterFields(
   "char2Fields",
-  FIELD_GROUPS.buff,
+  {
+    common: FIELD_GROUPS.buff_common,
+    normal: FIELD_GROUPS.buff_normal,
+    break: FIELD_GROUPS.buff_break,
+    elation: FIELD_GROUPS.buff_elation
+  },
   "c2"
 );
 
-createFields(
+
+createCharacterFields(
   "char3Fields",
-  FIELD_GROUPS.buff,
+  {
+    common: FIELD_GROUPS.buff_common,
+    normal: FIELD_GROUPS.buff_normal,
+    break: FIELD_GROUPS.buff_break,
+    elation: FIELD_GROUPS.buff_elation
+  },
   "c3"
 );
 
-createFields(
+
+createCharacterFields(
   "char4Fields",
-  FIELD_GROUPS.buff,
+  {
+    common: FIELD_GROUPS.buff_common,
+    normal: FIELD_GROUPS.buff_normal,
+    break: FIELD_GROUPS.buff_break,
+    elation: FIELD_GROUPS.buff_elation
+  },
   "c4"
 );
+
 
 createFields(
   "damageFields",
@@ -1236,29 +1558,49 @@ createFields(
   "dmg"
 );
 
+
+const damageTypeSelect =
+  document.getElementById(
+    "dmg_damageType"
+  );
+
+if (damageTypeSelect) {
+  damageTypeSelect.addEventListener(
+    "change",
+    updateCharacterSections
+  );
+}
+
+
 refreshSaves();
+updateCharacterSections();
 
 
 document.getElementById(
   "calcBtn"
-).onclick = calculate;
+).onclick =
+  calculate;
 
 
 document.getElementById(
   "saveBtn"
-).onclick = saveCurrent;
+).onclick =
+  saveCurrent;
 
 
 document.getElementById(
   "loadBtn"
-).onclick = loadCurrent;
+).onclick =
+  loadCurrent;
 
 
 document.getElementById(
   "deleteBtn"
-).onclick = deleteCurrent;
+).onclick =
+  deleteCurrent;
 
 
 document.getElementById(
   "resetBtn"
-).onclick = resetAll;
+).onclick =
+  resetAll;
