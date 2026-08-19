@@ -102,10 +102,26 @@ function damageTakenIncrease(v) {
 // 50% → 0.5
 // ------------------------------------------------------------
 
-function damageTakenReduction(v) {
-  return 1.0 - (v || 0);
+function damageTakenReduction(v1, v2, v3) {
+  return (
+    1.0 - (v1 || 0)
+  ) * (
+    1.0 - (v2 || 0)
+  ) * (
+    1.0 - (v3 || 0)
+  );
 }
 
+
+//가하는 피해 감소
+
+function dealtDamageReduction(v1, v2, v3) {
+  return (
+    (1.0 - (v1 || 0)) *
+    (1.0 - (v2 || 0)) *
+    (1.0 - (v3 || 0))
+  );
+}
 
 // ------------------------------------------------------------
 // 확정 피해
@@ -170,9 +186,11 @@ function commonMultipliers(
     enemy.resistance_penetration
   );
 
-  const damageReduction = damageTakenReduction(
-    enemy.damage_taken_reduction
-  );
+  const damageTakenReductionMultiplier = damageTakenReduction(
+  enemy.damage_taken_reduction,
+  enemy.damage_taken_reduction_2,
+  enemy.damage_taken_reduction_3
+);
 
   const confirmed = confirmedDamageMultiplier(
     finalMods.confirmed_damage
@@ -187,7 +205,7 @@ function commonMultipliers(
   const multiplier =
     defense *
     resistance *
-    damageReduction *
+    damageTakenReductionMultipler *
     confirmed *
     finalDamage;
 
@@ -199,7 +217,7 @@ function commonMultipliers(
     resistance_multiplier: resistance,
 
     damage_taken_reduction_multiplier:
-      damageReduction,
+      damageReductionMultiplier,
 
     confirmed_damage_multiplier:
       confirmed,
@@ -242,6 +260,15 @@ function normalDamage(
   const dealtDamage =
     1.0 + (extras.dealt_damage_increase || 0);
 
+  //가하는 피해 감소
+
+  const dealtDamageReductionMultiplier =
+  dealtDamageReduction(
+    extras.dealt_damage_reduction_1,
+    extras.dealt_damage_reduction_2,
+    extras.dealt_damage_reduction_3
+  );
+
   // 모든 데미지 타입에 적용
   const takenDamage =
     damageTakenIncrease(
@@ -257,6 +284,7 @@ function normalDamage(
   const totalMultiplier =
     dealtDamage *
     takenDamage *
+    dealtDamageReductionMultiplier*
     common.multiplier;
 
   const normalDamageValue =
