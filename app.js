@@ -217,9 +217,13 @@ function saveResultSlot(slot, result, damageType) {
     result.crit_damage ??
     0;
 
+  const saveName =
+    document.getElementById("saveName")?.value.trim() || "";
+
   resultSlots[slot] = {
     value: Number(value) || 0,
-    damageType
+    damageType,
+    saveName
   };
 
   renderComparison();
@@ -262,21 +266,32 @@ function renderComparison() {
   `;
 
   for (const slot of [1, 2, 3]) {
-    const result = resultSlots[slot];
+  const result = resultSlots[slot];
 
-    html += `
-      <div class="comparison-result-item">
-        <span>결과 ${slot}</span>
-        <strong>
-          ${
-            result
-              ? fmt(result.value)
-              : "-"
-          }
-        </strong>
-      </div>
-    `;
-  }
+  html += `
+    <div class="comparison-result-item">
+      <span>결과 ${slot}</span>
+
+      ${
+        result?.saveName
+          ? `
+            <small>
+              ${result.saveName}
+            </small>
+          `
+          : ""
+      }
+
+      <strong>
+        ${
+          result
+            ? fmt(result.value)
+            : "-"
+        }
+      </strong>
+    </div>
+  `;
+}
 
   html += `</div>`;
 
