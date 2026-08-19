@@ -6,7 +6,16 @@ const FIELD_GROUPS = {
     ["defense_ignore","방어력 무시 (%)","percent",0],
     ["defense_penetration","방어력 감소 (%)","percent",0],
     ["damage_taken_increase","받는 피해 증가 (%)","percent",0],
-    ["damage_taken_reduction","받는 피해 감소 (%)","percent",0]
+   
+    ["damage_taken_reduction","받는 피해 감소 1 (%)","percent",0],
+    ["damage_taken_reduction_2","받는 피해 감소 2 (%)","percent",0],
+    ["damage_taken_reduction_3","받는 피해 감소 3 (%)","percent",0],
+   
+    ["dealt_damage_reduction_1","가하는 피해 감소 1 (%)","percent",0],
+    ["dealt_damage_reduction_2","가하는 피해 감소 2 (%)","percent",0],
+    ["dealt_damage_reduction_3","가하는 피해 감소 3 (%)","percent",0],
+
+    ["is_broken","약점 격파 상태","select","NO"]
   ],
 
   // ============================================================
@@ -159,6 +168,17 @@ function createFields(containerId, fields, prefix) {
           option.textContent = text;
           input.appendChild(option);
         });
+      } else if (key === "is_broken") {
+
+    [
+      ["NO", "X"],
+      ["YES", "O"]
+    ].forEach(([value, text]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = text;
+      input.appendChild(option);
+    });
       } else {
         [
           "물리",
