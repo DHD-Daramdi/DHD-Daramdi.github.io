@@ -224,7 +224,7 @@ function commonMultipliers(
   const multiplier =
     defense *
     resistance *
-    damageTakenReductionMultipler *
+    damageTakenReductionMultiplier *
     confirmed *
     finalDamage*
     weaknessBreak;
@@ -239,7 +239,7 @@ function commonMultipliers(
     weakness_break_multiplier: weaknessBreak,
 
     damage_taken_reduction_multiplier:
-      damageReductionMultiplier,
+      damageTakenReductionMultiplier,
 
     confirmed_damage_multiplier:
       confirmed,
@@ -286,9 +286,9 @@ function normalDamage(
 
   const dealtDamageReductionMultiplier =
   dealtDamageReduction(
-    extras.dealt_damage_reduction_1,
-    extras.dealt_damage_reduction_2,
-    extras.dealt_damage_reduction_3
+    enemy.dealt_damage_reduction_1,
+    enemy.dealt_damage_reduction_2,
+    enemy.dealt_damage_reduction_3
   );
 
   // 모든 데미지 타입에 적용
@@ -345,6 +345,9 @@ function normalDamage(
 
     resistance_multiplier:
       common.resistance_multiplier,
+
+    weakness_break_multiplier:
+      common.weakness_break_multiplier,
 
     damage_taken_reduction_multiplier:
       common.damage_taken_reduction_multiplier,
@@ -468,6 +471,9 @@ function breakDamage(
     resistance_multiplier:
       common.resistance_multiplier,
 
+    weakness_break_multiplier:
+      common.weakness_break_multiplier,
+
     damage_taken_reduction_multiplier:
       common.damage_taken_reduction_multiplier,
 
@@ -585,6 +591,9 @@ function elationDamage(
 
     resistance_multiplier:
       common.resistance_multiplier,
+
+    weakness_break_multiplier:
+      common.weakness_break_multiplier,
 
     damage_taken_reduction_multiplier:
       common.damage_taken_reduction_multiplier,
