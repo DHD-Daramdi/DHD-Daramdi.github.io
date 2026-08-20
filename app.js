@@ -921,13 +921,14 @@ function calculate(slot = null) {
   );
   
   if (slot !== null) {
-  saveResultSlot(
-    slot,
-    result,
-    damage.damageType
-  );
+    saveResultSlot(
+      slot,
+      result,
+      damage.damageType
+    );
+  }
 }
-}
+
 
 // ============================================================
 // 숫자 표시
@@ -1879,3 +1880,638 @@ document.getElementById(
 ).onclick = () => {
   calculate(3);
 };
+
+// ============================================================
+// 탭 전환
+// ============================================================
+
+function switchCalculatorTab(tab) {
+  const damageTab = document.getElementById("damageTab");
+  const speedTab = document.getElementById("speedTab");
+  const damageBtn = document.getElementById("damageTabBtn");
+  const speedBtn = document.getElementById("speedTabBtn");
+
+  if (!damageTab || !speedTab || !damageBtn || !speedBtn) {
+    return;
+  }
+
+  const showDamage = tab === "damage";
+
+  damageTab.hidden = !showDamage;
+  speedTab.hidden = showDamage;
+
+  damageTab.classList.toggle("active", showDamage);
+  speedTab.classList.toggle("active", !showDamage);
+
+  damageBtn.classList.toggle("active", showDamage);
+  speedBtn.classList.toggle("active", !showDamage);
+
+  damageBtn.setAttribute(
+    "aria-selected",
+    String(showDamage)
+  );
+
+  speedBtn.setAttribute(
+    "aria-selected",
+    String(!showDamage)
+  );
+}
+
+
+// ============================================================
+// 속도 / 턴 계산기 상태
+// ============================================================
+
+const SPEED_ACTOR_COUNT = 8;
+const DEFAULT_SPEED_MAX_AV = 300;
+const FIRST_ROUND_AV = 150;
+
+let speedActors = [];
+let speedGaugeEffects = [];
+let speedBaseTimeline = [];
+let speedCurrentTimeline = [];
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function buildSpeedActorInputs() {
+  const root = document.getElementById("speedActorFields");
+  if (!root) return;
+
+  let html = `
+    <div class="speed-actor-header">
+      <span>번호</span>
+      <span>이름</span>
+      <span>기초 속도</span>
+      <span>속도 (%)</span>
+      <span>깡 속도</span>
+      <span>시작 행동게이지 증가 (%)</span>
+      <span>최종 속도</span>
+    </div>
+  `;
+
+  for (let i = 1; i <= SPEED_ACTOR_COUNT; i++) {
+    html += `
+      <div class="speed-actor-row" data-speed-actor="${i}">
+        <span class="speed-actor-number">${i}</span>
+
+        <input
+          id="speedName${i}"
+          class="speed-name-input"
+          type="text"
+          value="캐릭터 ${i}"
+          aria-label="${i}번 캐릭터 이름"
+        >
+
+        <input
+          id="speedBase${i}"
+          type="number"
+          min="0"
+          step="any"
+          value="0"
+          aria-label="${i}번 캐릭터 기초 속도"
+        >
+
+        <input
+          id="speedPercent${i}"
+          type="number"
+          step="any"
+          value="0"
+          aria-label="${i}번 캐릭터 속도 퍼센트"
+        >
+
+        <input
+          id="speedFlat${i}"
+          type="number"
+          step="any"
+          value="0"
+          aria-label="${i}번 캐릭터 깡 속도"
+        >
+
+        <input
+          id="speedInitialGauge${i}"
+          type="number"
+          min="0"
+          max="100"
+          step="any"
+          value="0"
+          aria-label="${i}번 캐릭터 시작 행동게이지 증가"
+        >
+
+        <output id="speedFinal${i}" class="speed-final-output">-</output>
+      </div>
+    `;
+  }
+
+  root.innerHTML = html;
+}
+
+
+function readSpeedActors() {
+  const actors = [];
+
+  for (let i = 1; i <= SPEED_ACTOR_COUNT; i++) {
+    const name =
+      document.getElementById(`speedName${i}`)?.value.trim() ||
+      `캐릭터 ${i}`;
+
+    const baseSpeed = Number(
+      document.getElementById(`speedBase${i}`)?.value
+    );
+
+    const speedPercent = Number(
+      document.getElementById(`speedPercent${i}`)?.value
+    );
+
+    const flatSpeed = Number(
+      document.getElementById(`speedFlat${i}`)?.value
+    );
+
+    const initialGauge = Number(
+      document.getElementById(`speedInitialGauge${i}`)?.value
+    );
+
+    const safeBase = Number.isFinite(baseSpeed) ? baseSpeed : 0;
+    const safePercent = Number.isFinite(speedPercent) ? speedPercent : 0;
+    const safeFlat = Number.isFinite(flatSpeed) ? flatSpeed : 0;
+    const safeGauge = Math.min(
+      Math.max(
+        Number.isFinite(initialGauge) ? initialGauge : 0,
+        0
+      ),
+      100
+    );
+
+    const final = finalSpeed(
+      safeBase,
+      safePercent / 100,
+      safeFlat,
+      0
+    );
+
+    const output =
+      document.getElementById(`speedFinal${i}`);
+
+    if (output) {
+      output.textContent =
+        final > 0 ? fmt(final) : "-";
+    }
+
+    actors.push({
+      id: `speed_${i}`,
+      name,
+      speed: final,
+      initialGauge: safeGauge / 100,
+      order: i - 1,
+      inputIndex: i
+    });
+  }
+
+  return actors.filter(actor => actor.speed > 0);
+}
+
+
+function getSpeedMaxAV() {
+  const value = Number(
+    document.getElementById("speedMaxAV")?.value
+  );
+
+  if (!Number.isFinite(value) || value <= 0) {
+    return DEFAULT_SPEED_MAX_AV;
+  }
+
+  return value;
+}
+
+
+function findGaugeEffect(actorId, action) {
+  return speedGaugeEffects.find(
+    effect =>
+      effect.actorId === actorId &&
+      effect.action === action
+  );
+}
+
+
+function setGaugeEffect(actorId, action, percent) {
+  const value = Math.min(
+    Math.max(Number(percent) || 0, 0),
+    100
+  );
+
+  const existing =
+    findGaugeEffect(actorId, action);
+
+  if (value <= 0) {
+    speedGaugeEffects = speedGaugeEffects.filter(
+      effect => !(
+        effect.actorId === actorId &&
+        effect.action === action
+      )
+    );
+    return;
+  }
+
+  if (existing) {
+    existing.amount = value;
+  } else {
+    speedGaugeEffects.push({
+      actorId,
+      action,
+      amount: value
+    });
+  }
+}
+
+
+function calculateSpeedTimeline() {
+  speedActors = readSpeedActors();
+
+  const maxAV = getSpeedMaxAV();
+
+  speedBaseTimeline = calculateBaseTimeline(
+    speedActors,
+    maxAV
+  );
+
+  speedCurrentTimeline = recalculateTimeline(
+    speedActors,
+    maxAV,
+    speedGaugeEffects
+  );
+
+  renderSpeedSummary();
+  renderSpeedTimeline();
+  renderSpeedTurnEditor();
+}
+
+
+function renderSpeedSummary() {
+  const root = document.getElementById("speedSummary");
+  if (!root) return;
+
+  const counts = countActionsWithinAV(
+    speedCurrentTimeline,
+    [FIRST_ROUND_AV, getSpeedMaxAV()]
+  );
+
+  const currentMax = getSpeedMaxAV();
+
+  let html = `
+    <div class="speed-summary-card">
+      <strong>150 AV</strong>
+      <div class="speed-count-list">
+  `;
+
+  for (const actor of speedActors) {
+    html += `
+      <span>
+        ${escapeHtml(actor.name)}
+        <b>${counts[FIRST_ROUND_AV]?.[actor.id] || 0}회</b>
+      </span>
+    `;
+  }
+
+  html += `
+      </div>
+    </div>
+
+    <div class="speed-summary-card">
+      <strong>${fmt(currentMax)} AV</strong>
+      <div class="speed-count-list">
+  `;
+
+  for (const actor of speedActors) {
+    html += `
+      <span>
+        ${escapeHtml(actor.name)}
+        <b>${counts[currentMax]?.[actor.id] || 0}회</b>
+      </span>
+    `;
+  }
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  if (speedGaugeEffects.length > 0) {
+    html += `
+      <div class="speed-summary-card modified-summary">
+        <strong>적용된 행동게이지</strong>
+        <div class="speed-effect-list">
+    `;
+
+    for (const effect of speedGaugeEffects) {
+      const actor = speedActors.find(
+        item => item.id === effect.actorId
+      );
+
+      html += `
+        <span>
+          ${escapeHtml(actor?.name || effect.actorId)} ${effect.action}번째 행동
+          <b>+${effect.amount}%</b>
+        </span>
+      `;
+    }
+
+    html += `
+        </div>
+        <button id="speedResetEffectsBtn" type="button">행동게이지 수정 초기화</button>
+      </div>
+    `;
+  }
+
+  root.innerHTML = html;
+
+  const reset = document.getElementById("speedResetEffectsBtn");
+  if (reset) {
+    reset.onclick = () => {
+      speedGaugeEffects = [];
+      calculateSpeedTimeline();
+    };
+  }
+}
+
+
+function renderSpeedTimeline() {
+  const root = document.getElementById("speedTimeline");
+  if (!root) return;
+
+  const maxAV = getSpeedMaxAV();
+  const timeline = speedCurrentTimeline;
+
+  if (speedActors.length === 0) {
+    root.innerHTML = `
+      <div class="speed-empty">
+        속도를 하나 이상 입력해 주세요.
+      </div>
+    `;
+    return;
+  }
+
+  const ticks = [];
+  const step = 25;
+
+  for (let av = 0; av <= maxAV + 0.001; av += step) {
+    const left = (av / maxAV) * 100;
+    ticks.push(`
+      <div class="speed-tick" style="left:${left}%">
+        <span>${fmt(av)}</span>
+      </div>
+    `);
+  }
+
+  const thresholdLeft =
+    Math.min(
+      100,
+      (FIRST_ROUND_AV / maxAV) * 100
+    );
+
+  let markers = "";
+  const groupedByAV = new Map();
+
+  for (const action of timeline) {
+    const key = action.av.toFixed(8);
+    if (!groupedByAV.has(key)) {
+      groupedByAV.set(key, []);
+    }
+    groupedByAV.get(key).push(action);
+  }
+
+  for (const group of groupedByAV.values()) {
+    group.sort((a, b) => a.order - b.order);
+
+    group.forEach((action, stackIndex) => {
+      const left = Math.min(
+        100,
+        Math.max(0, (action.av / maxAV) * 100)
+      );
+
+      const actorIndex = action.order + 1;
+      const changed = action.gaugeIncrease > 0;
+
+      markers += `
+        <button
+          type="button"
+          class="speed-marker ${changed ? "modified" : ""}"
+          data-actor-id="${escapeHtml(action.actorId)}"
+          data-action="${action.action}"
+          style="left:${left}%; top:${20 + actorIndex * 30 + stackIndex * 26}px"
+          title="${escapeHtml(action.actorName)} ${action.action}번째 행동 · ${fmt(action.av)} AV"
+        >
+          ${escapeHtml(action.actorName)}<sup>${action.action}</sup>
+        </button>
+      `;
+    });
+  }
+
+  const height = Math.max(
+    180,
+    speedActors.length * 30 + 90
+  );
+
+  root.innerHTML = `
+    <div class="speed-timeline" style="--speed-timeline-height:${height}px">
+      <div class="speed-axis">
+        <div class="speed-axis-line"></div>
+        <div class="speed-round-marker" style="left:${thresholdLeft}%">
+          <span>150 AV</span>
+        </div>
+        ${ticks.join("")}
+      </div>
+
+      <div class="speed-markers">
+        ${markers}
+      </div>
+    </div>
+
+    <div class="speed-timeline-legend">
+      <span>행동 번호는 같은 캐릭터의 몇 번째 행동인지 나타냅니다.</span>
+      <span>마커를 클릭하면 해당 턴에 행동게이지 증가를 입력할 수 있습니다.</span>
+    </div>
+  `;
+
+  root.querySelectorAll(".speed-marker").forEach(marker => {
+    marker.addEventListener("click", () => {
+      renderSpeedTurnEditor(
+        marker.dataset.actorId,
+        Number(marker.dataset.action)
+      );
+    });
+  });
+}
+
+
+function renderSpeedTurnEditor(
+  selectedActorId = null,
+  selectedAction = null
+) {
+  const root = document.getElementById("speedTurnEditor");
+  if (!root) return;
+
+  if (speedCurrentTimeline.length === 0) {
+    root.innerHTML = "";
+    return;
+  }
+
+  if (!selectedActorId || !selectedAction) {
+    root.innerHTML = `
+      <div class="speed-editor-placeholder">
+        타임라인의 턴을 클릭하면 해당 행동에 행동게이지 증가분을 입력할 수 있습니다.
+      </div>
+    `;
+    return;
+  }
+
+  const action = speedCurrentTimeline.find(
+    item =>
+      item.actorId === selectedActorId &&
+      item.action === selectedAction
+  );
+
+  if (!action) {
+    root.innerHTML = "";
+    return;
+  }
+
+  const existing =
+    findGaugeEffect(
+      selectedActorId,
+      selectedAction
+    );
+
+  root.innerHTML = `
+    <div class="speed-editor-card">
+      <div class="speed-editor-title">
+        <strong>${escapeHtml(action.actorName)} ${action.action}번째 행동</strong>
+        <span>현재 ${fmt(action.av)} AV</span>
+      </div>
+
+      <div class="speed-editor-form">
+        <label>
+          행동게이지 증가 (%)
+          <input
+            id="speedSelectedGauge"
+            type="number"
+            min="0"
+            max="100"
+            step="any"
+            value="${existing?.amount ?? 0}"
+          >
+        </label>
+
+        <button id="speedApplyGaugeBtn" class="primary" type="button">
+          적용 후 재계산
+        </button>
+      </div>
+
+      <p class="speed-editor-note">
+        이 효과는 선택한 행동을 앞당기며, 그 이후 같은 캐릭터의 행동도 함께 재계산합니다.
+      </p>
+    </div>
+  `;
+
+  document.getElementById("speedApplyGaugeBtn").onclick = () => {
+    const value = Number(
+      document.getElementById("speedSelectedGauge")?.value
+    );
+
+    setGaugeEffect(
+      selectedActorId,
+      selectedAction,
+      value
+    );
+
+    calculateSpeedTimeline();
+  };
+}
+
+
+function initSpeedCalculator() {
+  buildSpeedActorInputs();
+
+  const calcButton =
+    document.getElementById("speedCalcBtn");
+
+  if (calcButton) {
+    calcButton.onclick = () => {
+      speedGaugeEffects = [];
+      calculateSpeedTimeline();
+    };
+  }
+
+  const actorFields =
+    document.getElementById("speedActorFields");
+
+  if (actorFields) {
+    actorFields.addEventListener("input", event => {
+      if (event.target.matches("input")) {
+        const indexMatch =
+          event.target.id.match(/(\d+)$/);
+
+        if (!indexMatch) return;
+
+        const index = Number(indexMatch[1]);
+        const output =
+          document.getElementById(`speedFinal${index}`);
+
+        if (!output) return;
+
+        const base = Number(
+          document.getElementById(`speedBase${index}`)?.value
+        ) || 0;
+
+        const pct = Number(
+          document.getElementById(`speedPercent${index}`)?.value
+        ) || 0;
+
+        const flat = Number(
+          document.getElementById(`speedFlat${index}`)?.value
+        ) || 0;
+
+        const result = finalSpeed(
+          base,
+          pct / 100,
+          flat,
+          0
+        );
+
+        output.textContent =
+          result > 0 ? fmt(result) : "-";
+      }
+    });
+  }
+}
+
+
+// ============================================================
+// 초기화 후 이벤트 연결
+// ============================================================
+
+const damageTabBtn =
+  document.getElementById("damageTabBtn");
+
+const speedTabBtn =
+  document.getElementById("speedTabBtn");
+
+if (damageTabBtn) {
+  damageTabBtn.onclick = () =>
+    switchCalculatorTab("damage");
+}
+
+if (speedTabBtn) {
+  speedTabBtn.onclick = () =>
+    switchCalculatorTab("speed");
+}
+
+initSpeedCalculator();
+

@@ -93,6 +93,13 @@
 
 <main>
 
+<div class="calculator-tabs" role="tablist" aria-label="계산기 종류">
+  <button id="damageTabBtn" class="calculator-tab active" type="button" role="tab" aria-selected="true">데미지 계산</button>
+  <button id="speedTabBtn" class="calculator-tab" type="button" role="tab" aria-selected="false">속도 / 턴 계산</button>
+</div>
+
+<div id="damageTab" class="calculator-tab-content active" role="tabpanel">
+
 <section class="toolbar">
 
   <label>
@@ -303,12 +310,54 @@
 
 </section>
 
+</div>
+
+<div id="speedTab" class="calculator-tab-content" role="tabpanel" hidden>
+  <section class="speed-workspace">
+
+    <div class="panel speed-input-panel">
+      <h2>속도 / 턴 계산</h2>
+      <p class="panel-note">기초 속도, 속도%, 깡 속도와 시작 행동 게이지 증가분을 입력하면 0~300 AV 행동 순서를 계산합니다. 150 AV는 첫 라운드 기준선으로 별도 표시됩니다.</p>
+
+      <div id="speedActorFields" class="speed-actor-fields"></div>
+
+      <div class="speed-settings-row">
+        <label>
+          타임라인 최대 AV
+          <input id="speedMaxAV" type="number" min="1" step="1" value="300">
+        </label>
+
+        <button id="speedCalcBtn" class="primary" type="button">속도 계산</button>
+      </div>
+    </div>
+
+    <div class="panel speed-result-panel">
+      <h2>행동 타임라인</h2>
+      <div id="speedSummary" class="speed-summary"></div>
+      <div id="speedTimeline" class="speed-timeline-wrap"></div>
+      <div id="speedTurnEditor" class="speed-turn-editor"></div>
+
+      <details class="info-section">
+        <summary>속도 / 행동 수치 계산식 설명</summary>
+        <div class="info-content">
+          <p><strong>최종 속도</strong> = (기초 속도 + 기초 속도 증가) × (1 + 속도%) + 깡 속도</p>
+          <p><strong>기본 행동 수치</strong> = 10000 ÷ 최종 속도</p>
+          <p><strong>첫 행동</strong>은 시작 행동 게이지 증가분을 적용합니다. 이후 행동은 직전 행동을 기준으로 기본 행동 간격을 이어갑니다.</p>
+          <p>특정 턴에 행동 게이지 증가분을 추가하면 해당 턴이 앞당겨지고, 그 이후 같은 캐릭터의 행동도 함께 재계산됩니다.</p>
+        </div>
+      </details>
+    </div>
+
+  </section>
+</div>
+
 </main>
 
 
 
 <script src="damage.js"></script>
 <script src="buffs.js"></script>
+<script src="speed.js"></script>
 <script src="app.js"></script>
 
 
