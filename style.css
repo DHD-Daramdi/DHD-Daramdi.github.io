@@ -569,3 +569,408 @@ header {
     font-size: 18px;
   }
 }
+
+/* =========================================================
+   CALCULATOR TABS
+   ========================================================= */
+
+.calculator-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.calculator-tab {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid #d6dae0;
+  background: #e9edf1;
+  font-weight: 700;
+}
+
+.calculator-tab.active {
+  background: #20242a;
+  color: white;
+}
+
+.calculator-tab-content[hidden] {
+  display: none;
+}
+
+
+/* =========================================================
+   INFO / EXPLANATION
+   ========================================================= */
+
+.info-section {
+  margin-top: 14px;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  background: #fafbfc;
+  overflow: hidden;
+}
+
+.info-section summary {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  background: #f1f3f6;
+  user-select: none;
+}
+
+.info-section summary:hover {
+  background: #e9edf1;
+}
+
+.info-content {
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.info-content p {
+  margin: 0 0 9px;
+}
+
+.info-content p:last-child {
+  margin-bottom: 0;
+}
+
+.panel-note {
+  margin: -4px 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  opacity: .72;
+}
+
+
+/* =========================================================
+   SPEED CALCULATOR
+   ========================================================= */
+
+.speed-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.speed-input-panel,
+.speed-result-panel {
+  min-width: 0;
+}
+
+.speed-actor-fields {
+  display: grid;
+  gap: 6px;
+}
+
+.speed-actor-header,
+.speed-actor-row {
+  display: grid;
+  grid-template-columns: 34px minmax(90px, 1.2fr) repeat(4, minmax(78px, 1fr)) minmax(78px, .9fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.speed-actor-header {
+  padding: 0 2px 5px;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: .65;
+}
+
+.speed-actor-row {
+  padding: 5px 0;
+}
+
+.speed-actor-row input {
+  min-width: 0;
+  width: 100%;
+  text-align: right;
+}
+
+.speed-actor-row .speed-name-input {
+  text-align: left;
+}
+
+.speed-actor-number {
+  text-align: center;
+  font-weight: 700;
+  opacity: .65;
+}
+
+.speed-final-output {
+  display: block;
+  padding: 8px 7px;
+  border-radius: 7px;
+  background: #f1f3f6;
+  text-align: right;
+  font-weight: 700;
+  min-width: 0;
+}
+
+.speed-settings-row {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  margin-top: 12px;
+}
+
+.speed-settings-row label {
+  flex: 1;
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.speed-settings-row button {
+  flex: 0 0 auto;
+}
+
+.speed-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.speed-summary-card {
+  padding: 10px;
+  border-radius: 8px;
+  background: #f1f3f6;
+}
+
+.speed-summary-card > strong {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+}
+
+.speed-count-list,
+.speed-effect-list {
+  display: grid;
+  gap: 4px;
+}
+
+.speed-count-list span,
+.speed-effect-list span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.modified-summary {
+  grid-column: 1 / -1;
+}
+
+.modified-summary button {
+  margin-top: 9px;
+  width: 100%;
+}
+
+.speed-timeline-wrap {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.speed-timeline {
+  position: relative;
+  min-width: 760px;
+  height: var(--speed-timeline-height, 220px);
+  border: 1px solid #e1e4e8;
+  border-radius: 9px;
+  background: linear-gradient(
+    to bottom,
+    rgba(241, 243, 246, .55),
+    rgba(255, 255, 255, .8)
+  );
+  overflow: hidden;
+}
+
+.speed-axis,
+.speed-markers {
+  position: absolute;
+  inset: 0;
+}
+
+.speed-axis-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58px;
+  border-top: 2px solid #cdd2d8;
+}
+
+.speed-round-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed #a0a6ae;
+  z-index: 2;
+}
+
+.speed-round-marker span {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.speed-tick {
+  position: absolute;
+  top: 48px;
+  height: 20px;
+  border-left: 1px solid #cdd2d8;
+  z-index: 1;
+}
+
+.speed-tick span {
+  position: absolute;
+  top: 10px;
+  left: 4px;
+  white-space: nowrap;
+  font-size: 10px;
+  opacity: .6;
+}
+
+.speed-marker {
+  position: absolute;
+  transform: translate(-50%, 0);
+  z-index: 3;
+  padding: 5px 7px;
+  min-width: 34px;
+  border-radius: 7px;
+  border: 1px solid #cdd2d8;
+  background: white;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.speed-marker:hover {
+  z-index: 10;
+  transform: translate(-50%, 0) scale(1.04);
+}
+
+.speed-marker.modified {
+  border-color: #20242a;
+  font-weight: 800;
+}
+
+.speed-marker sup {
+  margin-left: 2px;
+  font-size: 8px;
+  opacity: .7;
+}
+
+.speed-timeline-legend {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 7px;
+  font-size: 11px;
+  opacity: .65;
+}
+
+.speed-empty,
+.speed-editor-placeholder {
+  padding: 14px;
+  border-radius: 8px;
+  background: #f1f3f6;
+  font-size: 13px;
+}
+
+.speed-turn-editor {
+  margin-top: 12px;
+}
+
+.speed-editor-card {
+  padding: 12px;
+  border-radius: 9px;
+  background: #f1f3f6;
+}
+
+.speed-editor-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: baseline;
+}
+
+.speed-editor-title span {
+  font-size: 12px;
+  opacity: .65;
+}
+
+.speed-editor-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.speed-editor-form label {
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.speed-editor-note {
+  margin: 9px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: .65;
+}
+
+
+/* =========================================================
+   SPEED MOBILE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .speed-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .calculator-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 4px 0;
+    background: #f1f3f6;
+  }
+
+  .speed-actor-fields {
+    overflow-x: auto;
+  }
+
+  .speed-actor-header,
+  .speed-actor-row {
+    min-width: 690px;
+  }
+
+  .speed-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .speed-editor-form {
+    grid-template-columns: 1fr;
+  }
+
+  .speed-timeline-legend {
+    display: grid;
+  }
+}
