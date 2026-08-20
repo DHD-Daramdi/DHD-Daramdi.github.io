@@ -2299,18 +2299,18 @@ function renderSpeedTimeline() {
       const actorIndex = action.order + 1;
       const changed = action.gaugeIncrease > 0;
 
-      markers += `
-        <button
-          type="button"
-          class="speed-marker ${changed ? "modified" : ""}"
-          data-actor-id="${escapeHtml(action.actorId)}"
-          data-action="${action.action}"
-          style="left:${left}%; top:${20 + actorIndex * 30 + stackIndex * 26}px"
-          title="${escapeHtml(action.actorName)} ${action.action}번째 행동 · ${fmt(action.av)} AV"
-        >
-          ${escapeHtml(action.actorName)}<sup>${action.action}</sup>
-        </button>
-      `;
+      markers += ` 
+        <button 
+           type="button" 
+           class="speed-marker ${changed ? "modified" : ""}" 
+           data-actor-id="${escapeHtml(action.actorId)}" 
+           data-action="${action.action}" 
+           style="left:${left}%; top:${16 + actorIndex * 40}px" 
+           title="${escapeHtml(action.actorName)} ${action.action}번째 행동 · ${fmt(action.av)} AV" 
+        > 
+       ${escapeHtml(action.actorName)}<sup>${action.action}</sup> 
+     </button> 
+     `;
     });
   }
 
